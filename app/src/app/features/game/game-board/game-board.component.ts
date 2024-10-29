@@ -21,6 +21,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     this.gameSubscription = this.gameService.gameState$.subscribe(game => {
       console.log(game);
       this.isGameLoaded = true
+      this.game = game
 
     });
   }

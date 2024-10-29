@@ -5,7 +5,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { map } from 'rxjs/operators';
 import { iCell, iGame, iMove, Player } from '../interfaces/game';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable({
   providedIn: 'root'
