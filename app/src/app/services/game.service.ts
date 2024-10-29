@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { map } from 'rxjs/operators';
-import { iApiResponse, iCell, iGame, iMove, Player } from '../interfaces/game';
+import { iCell, iGame, iMove, Player } from '../interfaces/game';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable({
@@ -19,7 +19,6 @@ export class GameService {
   gameState$ = this.gameStateSubject.asObservable();
 
   constructor(private apiService: ApiService) {
-   this.createGame()
   }
 
   private createEmptyBoard(): iCell[][] {
@@ -34,36 +33,35 @@ export class GameService {
     return board;
   }
 
-  // loadGame(gameId: number): void {
-  //   this.apiService.get<iGame>(`${gameId}`).subscribe({
-  //     next: (response: iApiResponse<iGame>) => {
-  //       if (response.success && response.data) {
-  //         this.gameStateSubject.next(response.data);
-  //       } else {
-  //         // Se la partita non esiste, creane una nuova
-  //         this.createGame(gameId);
-  //       }
-  //     },
-  //     error: (error) => {
-  //       console.error('Errore nel caricamento della partita:', error);
-  //     }
-  //   });
-  // }
+  loadGame(gameId: number): void {
+    this.apiService.get<iGame>(`${gameId}`).subscribe({
+      next: (response: iGame) => {
+        if (response) {
+          this.gameStateSubject.next(response);
+        } else {
+          // Se la partita non esiste, creane una nuova
+          this.createGame();
+        }
+      },
+      error: (error) => {
+        console.error('Errore nel caricamento della partita:', error);
+      }
+    });
+  }
 
-  private createGame(): void {
-    const newGame: iGame = {
-      id: uuidv4(),
+  createGame(): void {
+    const newGame: Partial<iGame> = {
       board: this.createEmptyBoard(),
       currentPlayer: 'Player1',
       timer: this.initialTimer,
       isGameOver: false,
       winner: null,
-      moves: []
+      moves: [],
     };
     this.apiService.post<iGame>(newGame).subscribe({
-      next: (response: iApiResponse<iGame>) => {
-        if (response.success && response.data) {
-          this.gameStateSubject.next(response.data);
+      next: (response: iGame) => {
+        if (response) {
+          this.gameStateSubject.next(response);
         }
       },
       error: (error) => {
@@ -119,9 +117,9 @@ export class GameService {
 
         // Aggiorna lo stato del gioco nell'API
         this.apiService.put<iGame>(`games/${state.id}`, updatedGame).subscribe({
-          next: (response: iApiResponse<iGame>) => {
-            if (response.success && response.data) {
-              this.gameStateSubject.next(response.data);
+          next: (response: iGame) => {
+            if (response) {
+              this.gameStateSubject.next(response);
             }
           },
           error: (error) => {
@@ -193,9 +191,9 @@ export class GameService {
     };
 
     this.apiService.put<iGame>(`games/${state.id}`, resetGame).subscribe({
-      next: (response: iApiResponse<iGame>) => {
-        if (response.success && response.data) {
-          this.gameStateSubject.next(response.data);
+      next: (response: iGame) => {
+        if (response) {
+          this.gameStateSubject.next(response);
         }
       },
       error: (error) => {
@@ -215,9 +213,9 @@ export class GameService {
     };
 
     this.apiService.put<iGame>(`games/${state.id}`, updatedGame).subscribe({
-      next: (response: iApiResponse<iGame>) => {
-        if (response.success && response.data) {
-          this.gameStateSubject.next(response.data);
+      next: (response: iGame) => {
+        if (response) {
+          this.gameStateSubject.next(response);
         }
       },
       error: (error) => {

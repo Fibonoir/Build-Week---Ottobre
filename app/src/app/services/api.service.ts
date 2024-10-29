@@ -5,39 +5,45 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment.development';
-import { iApiResponse } from '../interfaces/game';
+import { iGame } from '../interfaces/game';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private gameUrl = environment.gameUrl; // Sostituisci con l'URL reale della tua API
+  private gameUrl = environment.gameUrl;
 
   constructor(private http: HttpClient) {}
 
-  get<T>(id: string): Observable<iApiResponse<T>> {
-    return this.http.get<iApiResponse<T>>(`${this.gameUrl}/:${id}`)
+  get<T>(id: string): Observable<iGame> {
+    return this.http.get<iGame>(`${this.gameUrl}/${id}`, {
+      headers: { 'Accept': 'application/json' }
+    })
     .pipe(catchError((error: HttpErrorResponse) => {
       return throwError(() => error);
     }));
   }
 
-  post<T>(body: any): Observable<iApiResponse<T>> {
-    return this.http.post<iApiResponse<T>>(`${this.gameUrl}`, body)
+  post<T>(body: any): Observable<iGame> {
+    return this.http.post<iGame>(`${this.gameUrl}`, JSON.stringify(body), {
+      headers: { 'Content-Type': 'application/json' }
+    })
     .pipe(catchError((error: HttpErrorResponse) => {
       return throwError(() => error);
     }));
   }
 
-  put<T>(id: string, body: any): Observable<iApiResponse<T>> {
-    return this.http.put<iApiResponse<T>>(`${this.gameUrl}/:${id}`, body)
+  put<T>(id: string, body: any): Observable<iGame> {
+    return this.http.put<iGame>(`${this.gameUrl}/:${id}`, JSON.stringify(body), {
+      headers: { 'Content-Type': 'application/json' }
+    })
     .pipe(catchError((error: HttpErrorResponse) => {
       return throwError(() => error);
     }));
   }
 
-  delete<T>(id: string): Observable<iApiResponse<T>> {
-    return this.http.delete<iApiResponse<T>>(`${this.gameUrl}/`)
+  delete<T>(id: string): Observable<iGame> {
+    return this.http.delete<iGame>(`${this.gameUrl}/`)
     .pipe(catchError((error: HttpErrorResponse) => {
       return throwError(() => error);
     }));

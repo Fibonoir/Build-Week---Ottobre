@@ -26,8 +26,3 @@ export interface iGame {
   moves: iMove[];
 }
 
-export interface iApiResponse<T> {
-  data: T;
-  message: string;
-  success: boolean;
-}
