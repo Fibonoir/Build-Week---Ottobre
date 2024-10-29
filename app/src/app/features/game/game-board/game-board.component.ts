@@ -17,7 +17,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   constructor(private gameService: GameService) {}
 
   ngOnInit(): void {
-    this.gameService.createGame();
+    this.gameService.loadGame(1);
     this.gameSubscription = this.gameService.gameState$.subscribe(game => {
       console.log(game);
       this.isGameLoaded = true
@@ -28,6 +28,9 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
   onColumnClick(col: number): void {
     if (this.game && !this.game.isGameOver) {
+      console.log(col);
+      //just for debugging
+
       this.gameService.makeMove(col);
     }
   }
