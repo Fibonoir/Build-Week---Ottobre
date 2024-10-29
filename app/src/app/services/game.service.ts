@@ -3,7 +3,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import { map } from 'rxjs/operators';
 import { iCell, iGame, iMove, Player } from '../interfaces/game';
 
 @Injectable({
@@ -16,13 +15,15 @@ export class GameService {
 
   private gameStateSubject = new BehaviorSubject<iGame | null>(null);
   gameState$ = this.gameStateSubject.asObservable();
+  private savedGamesSubject = new BehaviorSubject<iGame[]>([]);
+  savedGames$: Observable<iGame[]> = this.savedGamesSubject.asObservable();
 
   constructor(private apiService: ApiService) {
   }
 
   private createEmptyBoard(): iCell[][] {
     const board: iCell[][] = [];
-    for (let row = 0; row < this.initialRows; row++) { // Start from top
+    for (let row = 0; row < this.initialRows; row++) {
       const currentRow: iCell[] = [];
       for (let col = 0; col < this.initialCols; col++) {
         currentRow.push({ row, col, occupiedBy: null });
@@ -33,6 +34,16 @@ export class GameService {
   }
 
 
+  loadSavedGames(): void {
+    this.apiService.getSavedGames<iGame[]>().subscribe({
+      next: (res: iGame[]) => {
+        this.savedGamesSubject.next(res);
+      },
+      error: (err) => {
+        console.error('Error loading saved games:', err);
+      }
+    });
+  }
 
 
   loadGame(gameId: number): void {
@@ -244,6 +255,11 @@ export class GameService {
 
   getCurrentGameState(): iGame | null {
     return this.gameStateSubject.value;
+  }
+
+  cancelGame(id: string) {
+    this.apiService.delete<iGame>(id).subscribe()
+
   }
 
 }

@@ -1,4 +1,3 @@
-// src/app/core/models/game.models.ts
 
 export type Player = 'Player1' | 'Player2';
 

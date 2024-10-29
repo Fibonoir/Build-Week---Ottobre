@@ -1,0 +1,15 @@
+
+@keyframes fall {
+  0% {
+    transform: translateX(-600%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-fall {
+  animation: fall 0.2s ease-in;
+}

@@ -1,45 +1,60 @@
-<ng-container *ngIf="isGameLoaded">
-  <div class="flex flex-col items-center">
-    <h1 class="text-2xl font-bold mb-4">Forza 4</h1>
+<div class="flex flex-col items-center">
+  <h1 class="text-2xl font-bold mb-4">Forza 4</h1>
 
-    <div class="mb-4">
-      <app-timer></app-timer>
-    </div>
+  <div class="mb-4">
+    <app-timer></app-timer>
+  </div>
 
-    <div
-      class="grid grid-cols-6 gap-1 bg-blue-500 p-2 rounded mx-auto rotate-90"
-    >
-      <div *ngFor="let row of game?.board">
-        <div
-          *ngFor="let cell of row"
-          (click)="onColumnClick(cell.col)"
-          class="w-12 h-12 bg-white rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-200 m-1"
-        >
+  <div class="flex">
+    <div>
+      <div
+        class="grid grid-cols-6 gap-1 bg-blue-500 p-2 rounded mx-auto rotate-90"
+      >
+        <div *ngFor="let row of game?.board">
           <div
-            [ngClass]="{
-              'bg-red-500': cell.occupiedBy === 'Player1',
-              'bg-yellow-500': cell.occupiedBy === 'Player2'
-            }"
-            class="w-10 h-10 rounded-full"
-          ></div>
+            *ngFor="let cell of row"
+            (click)="onColumnClick(cell.col)"
+            class="w-11 h-11 bg-white rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-200 m-1"
+          >
+            <div
+              [ngClass]="{
+                'bg-red-500': cell.occupiedBy === 'Player1',
+                'bg-yellow-500': cell.occupiedBy === 'Player2',
+                'animate-fall': isLastMove(cell)
+              }"
+              class="w-10 h-10 rounded-full"
+            ></div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="mt-4">
-      <button
-        (click)="resetGame()"
-        class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-      >
-        Resetta Gioco
-      </button>
+      <div class="mt-4">
+        <button
+          (click)="resetGame()"
+          class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+        >
+          Resetta Gioco
+        </button>
+      </div>
     </div>
-
-    <div *ngIf="game?.isGameOver" class="mt-4">
-      <p class="text-xl font-semibold">
-        <span *ngIf="game?.winner">Vince: {{ game?.winner }}</span>
-        <span *ngIf="!game?.winner">Pareggio!</span>
-      </p>
+    <div class="mx-4">
+      <ul>
+        <li *ngFor="let game of savedGames" class="group flex justify-between">
+          <h1>Game: {{ game.id }}</h1>
+          <button
+            class="px-4 py-2 bg bg-red-500 rounded-lg hidden group-hover:block"
+            (click)="cancelGame(game.id)"
+          >
+            DELETE
+          </button>
+        </li>
+      </ul>
     </div>
   </div>
-</ng-container>
+  <div *ngIf="game?.isGameOver" class="mt-4">
+    <p class="text-xl font-semibold">
+      <span *ngIf="game?.winner">Vince: {{ game?.winner }}</span>
+      <span *ngIf="!game?.winner">Pareggio!</span>
+    </p>
+  </div>
+</div>

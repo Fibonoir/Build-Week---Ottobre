@@ -22,6 +22,13 @@ export class ApiService {
     }));
   }
 
+  getSavedGames<T>(): Observable<iGame[]> {
+    return this.http.get<iGame[]>(`${this.gameUrl}`)
+    .pipe(catchError((error: HttpErrorResponse) => {
+      return throwError(() => error);
+    }));
+  }
+
   post<T>(body: any): Observable<iGame> {
     return this.http.post<iGame>(`${this.gameUrl}`, body)
     .pipe(catchError((error: HttpErrorResponse) => {
@@ -41,7 +48,7 @@ export class ApiService {
   }
 
   delete<T>(id: string): Observable<iGame> {
-    return this.http.delete<iGame>(`${this.gameUrl}/`)
+    return this.http.delete<iGame>(`${this.gameUrl}/${id}`)
     .pipe(catchError((error: HttpErrorResponse) => {
       return throwError(() => error);
     }));

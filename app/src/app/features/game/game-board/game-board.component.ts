@@ -2,7 +2,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { GameService } from '../../../services/game.service';
-import { iGame } from '../../../interfaces/game';
+import { iCell, iGame, iMove } from '../../../interfaces/game';
 import { TimerService } from '../../../services/timer.service';
 
 @Component({
@@ -13,20 +13,43 @@ import { TimerService } from '../../../services/timer.service';
 export class GameBoardComponent implements OnInit, OnDestroy {
   game: iGame | null = null;
   gameSubscription!: Subscription;
-  isGameLoaded: boolean = false
+  lastMove: iMove | null = null;
+  savedGames: iGame[] = [];
+  savedGamesSubscription!: Subscription;
+
 
   constructor(private gameService: GameService, private timerService: TimerService) {}
 
   ngOnInit(): void {
     this.gameService.createGame();
-    this.gameSubscription = this.gameService.gameState$.subscribe(game => {
-      this.isGameLoaded = true;
-      // if (game) {
-      //   this.timerService.startTimer(game.timer);
-      // }
-      this.game = game;
+    this.gameSubscription = this.gameService.gameState$.subscribe((game) => {
+      if (game) {
+        this.game = game;
 
+        if (game.moves.length > 0) {
+          this.lastMove = game.moves[game.moves.length - 1];
+
+        } else {
+          this.lastMove = null;
+        }
+      }
     });
+    this.gameService.loadSavedGames();
+    this.savedGamesSubscription = this.gameService.savedGames$.subscribe((games) => this.savedGames = games)
+  }
+
+  isLastMove(cell: iCell): boolean {
+    if (!this.lastMove) return false;
+    if (cell.col !== this.lastMove.column) return false;
+
+    for (let row = 0; row < this.game!.board.length; row++) {
+      const currentCell = this.game!.board[row][cell.col];
+      if (currentCell.occupiedBy === this.lastMove.player) {
+        return cell.row === row;
+      }
+    }
+
+    return false;
   }
 
   onColumnClick(col: number): void {
@@ -41,7 +64,6 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   resetGame(): void {
     if (this.game) {
       this.gameService.resetGame();
-      // this.timerService.resetTimer(this.game.timer);
     }
   }
 
@@ -49,5 +71,9 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     if (this.gameSubscription) {
       this.gameSubscription.unsubscribe();
     }
+  }
+
+  cancelGame(id: string) {
+    this.gameService.cancelGame(id)
   }
 }
