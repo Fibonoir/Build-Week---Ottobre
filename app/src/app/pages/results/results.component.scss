@@ -1,0 +1,28 @@
+.bg-win-left {
+  background-image: url(../../../../public/vittoria.jpg);
+}
+.bg-win-right {
+  background-image: url(../../../../public/sconfitta.jpg);
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 20px;
+  background: random-color();
+  opacity: 0.8;
+  animation: fall 3s infinite;
+  top: -10%;
+  left: random-position();
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
