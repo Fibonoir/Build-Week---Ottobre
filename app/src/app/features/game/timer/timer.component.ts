@@ -11,22 +11,32 @@ import { TimerService } from '../../../services/timer.service';
 export class TimerComponent implements OnInit {
   timer$!: Observable<number>;
   currentPlayer$!: Observable<string>;
+  timer!: number;
 
   totalSeconds: number = 60;
   remainingSeconds: number = this.totalSeconds;
   seconds: number = this.remainingSeconds;
   timerSubscription!: Subscription;
 
-  constructor(gameSvc: GameService, timerSvc: TimerService) {}
+  constructor(private gameSvc: GameService, private timerSvc: TimerService) {}
 
   @ViewChild('progressCircle') progressCircle!: ElementRef<SVGCircleElement>;
   circumference: number = 2 * Math.PI * 59;
 
   ngOnInit(): void {
-    //   this.timer$ = this.gameSvc.gameState$.pipe(map((state) => state.timer));
-    //   this.currentPlayer$ = this.gameSvc.gameState$.pipe(
-    //     map((state) => state.currentPlayer)
-    //   );
+    this.gameSvc.gameState$.subscribe((game) => {
+      if (game){
+        this.timer = game.timer
+
+      }
+    })
+
+    this.currentPlayer$ = this.gameSvc.gameState$.pipe(
+      map((state) => state ? state.currentPlayer : '')
+    );
+
+
+
   }
 
   ngAfterViewInit(): void {

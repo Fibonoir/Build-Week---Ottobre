@@ -9,7 +9,7 @@ import { GameService } from './game.service';
 })
 export class TimerService {
   private timerSubscription: Subscription | null = null;
-  private countdownInterval: number = 1000; // 1 second
+  private countdownInterval: number = 1000;
 
   constructor(private gameService: GameService) {
     this.gameService.gameState$.subscribe((state) => {
