@@ -1,0 +1,47 @@
+.game-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+.grid {
+  display: flex;
+}
+
+.column {
+  display: flex;
+  flex-direction: column-reverse;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.cell {
+  width: 50px;
+  height: 50px;
+  background-color: #ddd;
+  border-radius: 50%;
+  margin: 2px;
+  transition: background-color 0.3s;
+}
+
+.cell.red {
+  background-color: red;
+}
+
+.cell.yellow {
+  background-color: yellow;
+}
+
+.winner-message,
+.draw-message {
+  font-size: 1.2em;
+  color: green;
+  margin-bottom: 10px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  font-size: 1em;
+}
