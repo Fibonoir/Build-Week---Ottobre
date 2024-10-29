@@ -21,10 +21,10 @@ export class TimerComponent implements OnInit {
       }
     })
 
-    console.log(this.timer);
-
     this.currentPlayer$ = this.gameSvc.gameState$.pipe(
       map((state) => state ? state.currentPlayer : '')
     );
+
+
   }
 }
