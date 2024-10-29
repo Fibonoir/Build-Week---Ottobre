@@ -13,15 +13,15 @@ export class TimerComponent implements OnInit {
   currentPlayer$!: Observable<string>;
   timer!: number;
 
-  totalSeconds: number = 60;
+  totalSeconds: number = 30;
   remainingSeconds: number = this.totalSeconds;
   seconds: number = this.remainingSeconds;
   timerSubscription!: Subscription;
 
-  constructor(private gameSvc: GameService, private timerSvc: TimerService) {}
+  constructor(private gameSvc: GameService) {}
 
   @ViewChild('progressCircle') progressCircle!: ElementRef<SVGCircleElement>;
-  circumference: number = 2 * Math.PI * 59;
+  circumference: number = 2 * Math.PI * 29;
 
   ngOnInit(): void {
     this.gameSvc.gameState$.subscribe((game) => {
@@ -56,10 +56,10 @@ export class TimerComponent implements OnInit {
 
   startTimer(): void {
     this.timerSubscription = interval(1000).subscribe(() => {
-      this.remainingSeconds--;
+      this.timer;
       this.updateTimer();
 
-      if (this.remainingSeconds <= 0) {
+      if (this.timer <= 0) {
         this.stopTimer();
       }
     });
@@ -72,10 +72,9 @@ export class TimerComponent implements OnInit {
   }
 
   updateTimer(): void {
-    this.seconds = this.remainingSeconds;
     const offset =
       this.circumference -
-      (this.circumference * this.remainingSeconds) / this.totalSeconds;
+      (this.circumference * this.timer) / this.totalSeconds;
     this.progressCircle.nativeElement.style.strokeDashoffset = `${offset}`;
   }
 
