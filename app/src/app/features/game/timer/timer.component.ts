@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { interval, map, Observable, Subscription } from 'rxjs';
 import { GameService } from '../../../services/game.service';
-import { keyframes } from '@angular/animations';
 
 @Component({
   selector: 'app-timer',

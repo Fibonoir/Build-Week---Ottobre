@@ -6,11 +6,11 @@
       Forza 4
     </h1>
     <div class="player-setting">
-      <h2 class="text-indigo-500 mb-4 text-center">Impostazioni giocatore</h2>
+      <h2 class="text-indigo-300 mb-4 text-center">Impostazioni giocatore</h2>
       <form (ngSubmit)="onSubmit()">
         <div>
           <div class="flex mb-4">
-            <label for="playerName1" class="text-indigo-500"
+            <label for="playerName1" class="text-indigo-300 me-3"
               >Nome Giocatore 1:</label
             >
             <input
@@ -21,24 +21,9 @@
               required
               class="border border-gray-300 rounded-md p-2 h-8 text-black"
             />
-            <div>
-              <label for="playerColor1" class="ms-3 text-indigo-500"
-                >Colore Pedina:</label
-              >
-              <select
-                id="playerColor1"
-                [(ngModel)]="player1.playerColor1"
-                name="playerColor1"
-                class="border border-gray-300 rounded-md p-2 py-0 h-8 text-black"
-              >
-                <option *ngFor="let color of colors" [value]="color">
-                  {{ color }}
-                </option>
-              </select>
-            </div>
           </div>
           <div class="flex mb-4">
-            <label for="playerName2" class="text-indigo-500"
+            <label for="playerName2" class="text-indigo-300 me-3"
               >Nome Giocatore 2:</label
             >
             <input
@@ -49,24 +34,9 @@
               required
               class="border border-gray-300 rounded-md p-2 h-8 text-black"
             />
-            <div>
-              <label for="playerColor2" class="ms-3 text-indigo-500"
-                >Colore Pedina:</label
-              >
-              <select
-                id="playerColor2"
-                [(ngModel)]="player2.playerColor2"
-                name="playerColor2"
-                class="border border-gray-300 rounded-md p-2 py-0 h-8 text-black"
-              >
-                <option *ngFor="let color of colors" [value]="color">
-                  {{ color }}
-                </option>
-              </select>
-            </div>
           </div>
         </div>
-        <div class="flex justify-center">
+        <div class="flex justify-end">
           <button
             type="submit"
             class="flex-none rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400"
