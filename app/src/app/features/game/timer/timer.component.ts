@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { interval, map, Observable, Subscription } from 'rxjs';
 import { GameService } from '../../../services/game.service';
-import { TimerService } from '../../../services/timer.service';
+import { keyframes } from '@angular/animations';
 
 @Component({
   selector: 'app-timer',
@@ -9,38 +9,31 @@ import { TimerService } from '../../../services/timer.service';
   styleUrl: './timer.component.scss',
 })
 export class TimerComponent implements OnInit {
-  timer$!: Observable<number>;
   currentPlayer$!: Observable<string>;
   timer!: number;
+  isPulsing: boolean = false;
 
-  totalSeconds: number = 30;
-  remainingSeconds: number = this.totalSeconds;
-  seconds: number = this.remainingSeconds;
+  totalSeconds!: number;
+  remainingSeconds!: number;
   timerSubscription!: Subscription;
 
   constructor(private gameSvc: GameService) {}
 
-  @ViewChild('progressCircle') progressCircle!: ElementRef<SVGCircleElement>;
-  circumference: number = 2 * Math.PI * 29;
-
   ngOnInit(): void {
     this.gameSvc.gameState$.subscribe((game) => {
-      if (game){
-        this.timer = game.timer
-
+      if (game) {
+        this.timer = game.timer;
+        this.totalSeconds = this.timer; // Imposta il totale
+        this.remainingSeconds = this.totalSeconds; // Imposta i secondi rimanenti
       }
-    })
+    });
 
     this.currentPlayer$ = this.gameSvc.gameState$.pipe(
-      map((state) => state ? state.currentPlayer : '')
+      map((state) => (state ? state.currentPlayer : ''))
     );
-
-
-
   }
 
   ngAfterViewInit(): void {
-    this.initializeCircle();
     this.startTimer();
   }
 
@@ -48,18 +41,11 @@ export class TimerComponent implements OnInit {
     this.stopTimer();
   }
 
-  initializeCircle(): void {
-    const circle = this.progressCircle.nativeElement;
-    circle.style.strokeDasharray = `${this.circumference}`;
-    circle.style.strokeDashoffset = `${this.circumference}`;
-  }
-
   startTimer(): void {
     this.timerSubscription = interval(1000).subscribe(() => {
-      this.timer;
-      this.updateTimer();
-
-      if (this.timer <= 0) {
+      if (this.remainingSeconds > 0) {
+        this.remainingSeconds--;
+      } else {
         this.stopTimer();
       }
     });
@@ -71,38 +57,16 @@ export class TimerComponent implements OnInit {
     }
   }
 
-  updateTimer(): void {
-    const offset =
-      this.circumference -
-      (this.circumference * this.timer) / this.totalSeconds;
-    this.progressCircle.nativeElement.style.strokeDashoffset = `${offset}`;
+  get timerClass(): string {
+    if (this.timer <= 5) {
+      this.isPulsing = true;
+      return 'red';
+    } else if (this.timer <= 10) {
+      return 'orange';
+    } else if (this.timer <= 20) {
+      return 'yellow';
+    } else {
+      return 'green';
+    }
   }
-
-  // questo dovrebbe funzionare in concomitanza con il nostro timerService
-
-  // seconds: number = 0;
-  // timerSubscription!: Subscription;
-
-  // @ViewChild('progressCircle') progressCircle!: ElementRef<SVGCircleElement>;
-  // circumference: number = 2 * Math.PI * 59; // Circumference for the circle
-
-  // ngOnInit(): void {
-  //   this.timerSubscription = this.timerSvc.gameSvc.gameStateSubject.subscribe(state => {
-  //     this.seconds = state.timer;
-  //     this.updateCircle(state.timer);
-  //   });
-
-  //   this.timerSvc.startTimer(); // Avvia il timer all'inizio
-  // }
-
-  // ngOnDestroy(): void {
-  //   this.timerSubscription.unsubscribe(); // Ferma la sottoscrizione quando il componente è distrutto
-  //   this.timerSvc.stopTimer(); // Ferma il timer quando il componente è distrutto
-  // }
-
-  // private updateCircle(remainingTime: number): void {
-  //   const offset = this.circumference - (this.circumference * remainingTime) / this.timerSvc.countdownInterval / 1000; // Assicurati di avere i secondi corretti
-  //   this.progressCircle.nativeElement.style.strokeDasharray = `${this.circumference}`;
-  //   this.progressCircle.nativeElement.style.strokeDashoffset = `${offset}`;
-  // }
 }
