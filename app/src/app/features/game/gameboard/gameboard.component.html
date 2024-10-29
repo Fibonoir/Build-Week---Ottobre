@@ -1,0 +1,37 @@
+<div class="flex flex-col items-center">
+  <div *ngIf="winner" class="mb-4 text-2xl font-bold text-green-600">
+    <p>Il giocatore {{ winner }} ha vinto!</p>
+    <button
+      (click)="resetGame()"
+      class="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+    >
+      Gioca di nuovo
+    </button>
+  </div>
+
+  <div
+    *ngIf="!winner && gameOver"
+    class="mb-4 text-2xl font-bold text-yellow-600"
+  >
+    <p>È un pareggio!</p>
+    <button
+      (click)="resetGame()"
+      class="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+    >
+      Gioca di nuovo
+    </button>
+  </div>
+
+  <div class="grid grid-cols-7 gap-1">
+    <div
+      class="column"
+      *ngFor="let col of board[0]; let colIndex = index"
+      (click)="placeToken(colIndex)"
+    >
+      <div
+        *ngFor="let cell of board; let rowIndex = index"
+        class="cell w-16 h-16 rounded-full transition-colors duration-200"
+      ></div>
+    </div>
+  </div>
+</div>
