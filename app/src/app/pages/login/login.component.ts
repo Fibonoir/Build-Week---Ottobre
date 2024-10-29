@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
+import { GameService } from '../../services/game.service';
+import { iGame } from '../../interfaces/game';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -6,44 +9,38 @@ import { Component } from '@angular/core';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  player1: { playerName1: string; playerColor1: string } = {
-    playerName1: '',
-    playerColor1: '',
-  };
-  player2: { playerName2: string; playerColor2: string } = {
-    playerName2: '',
-    playerColor2: '',
-  };
+  player1Name: string = "";
+  player2Name: string = "";
+  savedGames: iGame[] = [];
+  savedGamesSubscription!: Subscription;
+  isNewGame: boolean = false;
+  isSavedGame: boolean = false;
 
-  colors: string[] = ['red', 'blue', 'green', 'yellow'];
+  constructor(private gameService: GameService){}
+
+  ngOnInit() {
+    this.gameService.loadSavedGames();
+    this.savedGamesSubscription = this.gameService.savedGames$.subscribe((games) => this.savedGames = games)
+
+  }
 
   onSubmit() {
-    if (this.player1.playerColor1 === this.player2.playerColor2) {
-      alert('I colori dei giocatori devono essere diversi');
+
+    if (!this.player1Name || !this.player2Name) {
       return;
     }
-    if (!this.player1.playerName1 || !this.player2.playerName2) {
-      alert('Inserisci i nomi dei giocatori');
-      return;
-    }
-    if (!this.player1.playerColor1 || !this.player2.playerColor2) {
-      alert('Inserisci i colori dei giocatori');
-      return;
-    }
-    console.log('Utente1', this.player1);
-    console.log('Utente2', this.player2);
+
+    this.gameService.setPlayers({
+      player1: this.player1Name.trim(),
+      player2: this.player2Name.trim()
+    });
+
 
     this.resetForm();
   }
 
   resetForm() {
-    this.player1 = {
-      playerName1: '',
-      playerColor1: '',
-    };
-    this.player2 = {
-      playerName2: '',
-      playerColor2: '',
-    };
+    this.player1Name = ""
+    this.player2Name = ""
   }
 }

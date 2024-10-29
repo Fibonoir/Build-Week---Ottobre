@@ -1,9 +1,7 @@
-// src/app/core/services/game.service.ts
-
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import { iCell, iGame, iMove, Player } from '../interfaces/game';
+import { iCell, iGame, iMove, iPlayers } from '../interfaces/game';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +10,7 @@ export class GameService {
   private initialRows: number = 6;
   private initialCols: number = 7;
   private initialTimer: number = 30;
+  public players: iPlayers = { player1: '', player2: '' };
 
   private gameStateSubject = new BehaviorSubject<iGame | null>(null);
   gameState$ = this.gameStateSubject.asObservable();
@@ -46,15 +45,13 @@ export class GameService {
   }
 
 
+
+
   loadGame(gameId: number): void {
     this.apiService.get<iGame>(`${gameId}`).subscribe({
       next: (response: iGame) => {
-        if (response) {
           this.gameStateSubject.next(response);
-        } else {
-          // Se la partita non esiste, creane una nuova
-          this.createGame();
-        }
+
       },
       error: (error) => {
         console.error('Errore nel caricamento della partita:', error);
@@ -62,10 +59,15 @@ export class GameService {
     });
   }
 
+  setPlayers(players: iPlayers): void {
+    this.players = players
+  }
+
   createGame(): void {
     const newGame: Partial<iGame> = {
       board: this.createEmptyBoard(),
-      currentPlayer: 'Player1',
+      players: this.players,
+      currentPlayer: this.players.player1,
       timer: this.initialTimer,
       isGameOver: false,
       winner: null,
@@ -105,7 +107,7 @@ export class GameService {
 
         const updatedMoves = [...state.moves, newMove];
         let isGameOver = false;
-        let winner: Player | null = null;
+        let winner: string | null = null;
 
         // Controlla se il movimento ha portato a una vittoria
         if (this.checkWin(updatedBoard, row, col, state.currentPlayer)) {
@@ -116,7 +118,7 @@ export class GameService {
           winner = null; // Pareggio
         }
 
-        const nextPlayer: Player = state.currentPlayer === 'Player1' ? 'Player2' : 'Player1';
+        const nextPlayer: string = state.currentPlayer === this.players.player1 ? this.players.player2 : this.players.player1;
 
         const updatedGame: iGame = {
           ...state,
@@ -154,7 +156,7 @@ export class GameService {
     return board[0].every(cell => cell.occupiedBy !== null);
   }
 
-  private checkWin(board: iCell[][], row: number, col: number, player: Player): boolean {
+  private checkWin(board: iCell[][], row: number, col: number, player: string): boolean {
     return (
       this.checkDirection(board, row, col, player, 0, 1) || // Orizzontale
       this.checkDirection(board, row, col, player, 1, 0) || // Verticale
@@ -163,7 +165,7 @@ export class GameService {
     );
   }
 
-  private checkDirection(board: iCell[][], row: number, col: number, player: Player, deltaRow: number, deltaCol: number): boolean {
+  private checkDirection(board: iCell[][], row: number, col: number, player: string, deltaRow: number, deltaCol: number): boolean {
     let count = 1;
 
     // Controlla in una direzione
@@ -198,7 +200,7 @@ export class GameService {
     const resetGame: iGame = {
       ...state,
       board: this.createEmptyBoard(),
-      currentPlayer: 'Player1',
+      currentPlayer: "player1",
       timer: this.initialTimer,
       isGameOver: false,
       winner: null,
@@ -217,7 +219,7 @@ export class GameService {
     });
   }
 
-  setWinner(winner: Player | null): void {
+  setWinner(winner: string | null): void {
     const state = this.gameStateSubject.value;
     if (!state) return;
 

@@ -1,27 +1,33 @@
 
-export type Player = 'Player1' | 'Player2';
+// export type Player = 'Player1' | 'Player2';
 
 export interface iCell {
   row: number;
   col: number;
-  occupiedBy: Player | null;
+  occupiedBy: string | null;
 }
 
 export interface iMove {
   id: number;
   gameId: string;
-  player: Player;
+  player: string;
   column: number;
   timestamp: Date;
+}
+
+export interface iPlayers {
+  player1: string,
+  player2: string
 }
 
 export interface iGame {
   id: string;
   board: iCell[][];
-  currentPlayer: Player;
-  timer: number; // in seconds
+  players: iPlayers
+  currentPlayer: string;
+  timer: number;
   isGameOver: boolean;
-  winner: Player | null;
+  winner: string | null;
   moves: iMove[];
 }
 
