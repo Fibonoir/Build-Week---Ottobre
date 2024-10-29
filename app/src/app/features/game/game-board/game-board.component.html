@@ -6,12 +6,14 @@
       <app-timer></app-timer>
     </div>
 
-    <div class="grid grid-cols-6 gap-1 bg-blue-500 p-2 rounded mx-auto">
-      <div *ngFor="let row of game?.board" class="">
+    <div
+      class="grid grid-cols-6 gap-1 bg-blue-500 p-2 rounded mx-auto rotate-90"
+    >
+      <div *ngFor="let row of game?.board">
         <div
           *ngFor="let cell of row"
           (click)="onColumnClick(cell.col)"
-          class="w-12 h-12 bg-white rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-200"
+          class="w-12 h-12 bg-white rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-200 m-1"
         >
           <div
             [ngClass]="{

@@ -16,30 +16,28 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   get<T>(id: string): Observable<iGame> {
-    return this.http.get<iGame>(`${this.gameUrl}/${id}`, {
-      headers: { 'Accept': 'application/json' }
-    })
+    return this.http.get<iGame>(`${this.gameUrl}/${id}`)
     .pipe(catchError((error: HttpErrorResponse) => {
       return throwError(() => error);
     }));
   }
 
   post<T>(body: any): Observable<iGame> {
-    return this.http.post<iGame>(`${this.gameUrl}`, JSON.stringify(body), {
-      headers: { 'Content-Type': 'application/json' }
-    })
+    return this.http.post<iGame>(`${this.gameUrl}`, body)
     .pipe(catchError((error: HttpErrorResponse) => {
       return throwError(() => error);
     }));
   }
 
   put<T>(id: string, body: any): Observable<iGame> {
-    return this.http.put<iGame>(`${this.gameUrl}/:${id}`, JSON.stringify(body), {
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .pipe(catchError((error: HttpErrorResponse) => {
-      return throwError(() => error);
-    }));
+    const url = `${this.gameUrl}/${id}`;
+    return this.http.put<iGame>(url, body)
+    .pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('PUT request error:', error);
+        return throwError(() => new Error(error.message || 'Server Error'));
+      })
+    );
   }
 
   delete<T>(id: string): Observable<iGame> {

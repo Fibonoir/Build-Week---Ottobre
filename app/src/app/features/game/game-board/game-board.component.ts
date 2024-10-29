@@ -18,9 +18,8 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   constructor(private gameService: GameService, private timerService: TimerService) {}
 
   ngOnInit(): void {
-    this.gameService.loadGame(1);
+    this.gameService.createGame();
     this.gameSubscription = this.gameService.gameState$.subscribe(game => {
-      console.log(game);
       this.isGameLoaded = true;
       // if (game) {
       //   this.timerService.startTimer(game.timer);

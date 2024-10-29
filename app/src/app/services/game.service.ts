@@ -22,7 +22,7 @@ export class GameService {
 
   private createEmptyBoard(): iCell[][] {
     const board: iCell[][] = [];
-    for (let row = 0; row < this.initialRows; row++) {
+    for (let row = 0; row < this.initialRows; row++) { // Start from top
       const currentRow: iCell[] = [];
       for (let col = 0; col < this.initialCols; col++) {
         currentRow.push({ row, col, occupiedBy: null });
@@ -31,6 +31,9 @@ export class GameService {
     }
     return board;
   }
+
+
+
 
   loadGame(gameId: number): void {
     this.apiService.get<iGame>(`${gameId}`).subscribe({
@@ -114,15 +117,17 @@ export class GameService {
           moves: updatedMoves
         };
 
-        // Aggiorna lo stato del gioco nell'API
-        this.apiService.put<iGame>(`games/${state.id}`, updatedGame).subscribe({
+        console.log('Updating game with move:', updatedGame);
+
+        // Update the game state in the backend
+        this.apiService.put<iGame>(updatedGame.id, updatedGame).subscribe({
           next: (response: iGame) => {
             if (response) {
               this.gameStateSubject.next(response);
             }
           },
           error: (error) => {
-            console.error('Errore nell\'aggiornamento della partita:', error);
+            console.error('Error updating game:', error);
           }
         });
 
@@ -189,7 +194,7 @@ export class GameService {
       moves: []
     };
 
-    this.apiService.put<iGame>(`games/${state.id}`, resetGame).subscribe({
+    this.apiService.put<iGame>(`${state.id}`, resetGame).subscribe({
       next: (response: iGame) => {
         if (response) {
           this.gameStateSubject.next(response);
@@ -211,7 +216,7 @@ export class GameService {
       winner
     };
 
-    this.apiService.put<iGame>(`games/${state.id}`, updatedGame).subscribe({
+    this.apiService.put<iGame>(`${state.id}`, updatedGame).subscribe({
       next: (response: iGame) => {
         if (response) {
           this.gameStateSubject.next(response);
