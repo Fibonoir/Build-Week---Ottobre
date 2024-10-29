@@ -1,0 +1,46 @@
+main {
+  background-image: url(../../../../../public/sfondo_gioco.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+}
+
+@keyframes neon-border {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.8),
+      0 0 30px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.8);
+    border-color: rgb(255, 0, 0);
+  }
+  25% {
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.8), 0 0 20px rgba(0, 255, 0, 0.8),
+      0 0 30px rgba(0, 255, 0, 0.8), 0 0 40px rgba(0, 255, 0, 0.8);
+    border-color: rgb(0, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(0, 0, 255, 0.8), 0 0 20px rgba(0, 0, 255, 0.8),
+      0 0 30px rgba(0, 0, 255, 0.8), 0 0 40px rgba(0, 0, 255, 0.8);
+    border-color: rgb(0, 0, 255);
+  }
+  75% {
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.8), 0 0 20px rgba(255, 255, 0, 0.8),
+      0 0 30px rgba(255, 255, 0, 0.8), 0 0 40px rgba(255, 255, 0, 0.8);
+    border-color: rgb(255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.8),
+      0 0 30px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.8);
+    border-color: rgb(255, 0, 0);
+  }
+}
+
+.neon-border {
+  position: relative;
+  padding: 20px;
+  background-color: rgb(99 70 239 / 41%);
+  color: white;
+  text-align: center;
+  border-radius: 12px;
+  border: 4px solid;
+  animation: neon-border 5s linear infinite;
+}
