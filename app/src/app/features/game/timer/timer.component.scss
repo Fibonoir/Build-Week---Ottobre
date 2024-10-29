@@ -14,17 +14,19 @@
   bottom: 29px;
   right: -15px;
   transform: rotate(-90deg);
+  width: 200px;
+  height: 200px;
 }
 
 .bg-circle {
   fill: none;
-  stroke: blue;
+  stroke: #b89ebe;
   stroke-width: 15;
 }
 
 .progress-circle {
   fill: none;
-  stroke: red;
+  stroke: #00ffff;
   stroke-width: 15;
   stroke-linecap: round;
   stroke-dasharray: 440;
