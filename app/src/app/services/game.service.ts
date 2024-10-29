@@ -222,4 +222,23 @@ export class GameService {
       }
     });
   }
+
+  updateTimer(newTimer: number): void {
+    const state = this.gameStateSubject.value;
+    if (!state || state.isGameOver) {
+      return;
+    }
+
+    const updatedGame: iGame = {
+      ...state,
+      timer: newTimer,
+    };
+
+    this.gameStateSubject.next(updatedGame);
+  }
+
+  getCurrentGameState(): iGame | null {
+    return this.gameStateSubject.value;
+  }
+
 }

@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { GameService } from '../../../services/game.service';
 import { iGame } from '../../../interfaces/game';
+import { TimerService } from '../../../services/timer.service';
 
 @Component({
   selector: 'app-game-board',
@@ -14,14 +15,17 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   gameSubscription!: Subscription;
   isGameLoaded: boolean = false
 
-  constructor(private gameService: GameService) {}
+  constructor(private gameService: GameService, private timerService: TimerService) {}
 
   ngOnInit(): void {
     this.gameService.loadGame(1);
     this.gameSubscription = this.gameService.gameState$.subscribe(game => {
       console.log(game);
-      this.isGameLoaded = true
-      this.game = game
+      this.isGameLoaded = true;
+      // if (game) {
+      //   this.timerService.startTimer(game.timer);
+      // }
+      this.game = game;
 
     });
   }
