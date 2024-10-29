@@ -3,25 +3,22 @@
   [ngClass]="winner === 'player1' ? 'bg-win-left' : 'bg-win-right'"
 >
   <div
-    class="w-1/2 h-full flex items-center justify-center text-center p-8"
-    [ngClass]="
+    class="absolute inset-0 flex items-center justify-center text-center p-8"
+    [ngClass]="winner === 'player1' ? 'text-while' : 'text-gray-500'"
+  ></div>
+  <!-- [ngClass]="
       winner === 'player1'
         ? 'bg-blue-500 text-white'
         : 'bg-gray-300 text-gray-500'
     "
-  >
-    <div>
-      <h1 class="text-6xl font-bold mb-4">
-        {{ winner === "player1" ? "Hai vinto!" : "Hai perso!" }}
-      </h1>
-      <p class="text-2xl">
-        {{ winner === "player1" ? "Complimenti Player 1!" : "Player 1 vince" }}
-      </p>
-    </div>
+  > -->
+  <div>
+    <h1 class="text-6xl font-bold mb-4">{{ getResultMessage() }}</h1>
+    <p class="text-2xl">{{ getResultSubMessage() }}</p>
   </div>
 
   <div
-    class="w-1/2 h-full flex items-center justify-center text-center p-8"
+    class="w-1/2 h-full flex items-center justify-center text-center p-8 bg-win-right"
     [ngClass]="
       winner === 'player2'
         ? 'bg-red-500 text-white'
