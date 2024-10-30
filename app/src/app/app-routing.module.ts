@@ -11,7 +11,9 @@ const routes: Routes = [  {
   loadChildren: () =>
     import('./pages/login/login.module').then((m) => m.LoginModule),
 },
-{ path: 'results', loadChildren: () => import('./pages/results/results.module').then(m => m.ResultsModule) }];
+{ path: 'results',
+  loadChildren: () => import('./pages/results/results.module').then(m => m.ResultsModule)
+}];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
