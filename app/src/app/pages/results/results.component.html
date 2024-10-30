@@ -4,14 +4,21 @@
 >
   <div class="absolute top-0 left-0 p-8 text-red-600 flex flex-col items-start">
     <div class="bg-white bg-opacity-80 p-4 rounded shadow-md">
-      <h1 class="text-4xl font-bold">Hai perso! Player 2 vince</h1>
+      <h1 class="text-4xl font-bold">{{ getResultMessage() }}</h1>
     </div>
   </div>
 
   <div
     class="absolute inset-0 flex items-center justify-center text-center p-8"
     [ngClass]="winner === 'player1' ? 'text-white' : 'text-gray-500'"
-  ></div>
+  >
+    <button
+      (click)="playAgain()"
+      class="button flex-none rounded-md bg-indigo-500 px-8 py-4 text-lg font-semibold text-white shadow-sm hover:bg-indigo-400 transition duration-300"
+    >
+      Gioca di nuovo
+    </button>
+  </div>
 
   <div
     class="w-1/2 h-full flex items-end justify-end p-8 text-center bg-win-right"
@@ -23,9 +30,12 @@
   >
     <div class="text-right">
       <div class="bg-white bg-opacity-80 p-4 rounded shadow-md neon-border">
-        <h1 class="text-4xl font-bold mb-4 z-30">Hai vinto! Complimenti</h1>
+        <h1 class="text-4xl font-bold mb-4 z-30">
+          {{ getResultSubMessage() }}
+        </h1>
       </div>
     </div>
   </div>
+
   <div class="diagonal-line neon-border relative w-full h-screen"></div>
 </div>

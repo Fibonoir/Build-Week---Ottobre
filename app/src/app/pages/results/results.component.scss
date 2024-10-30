@@ -1,3 +1,8 @@
+button {
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+
 .bg-win-left,
 .bg-win-right {
   position: absolute;
@@ -84,4 +89,9 @@
     transform: translateY(100vh) rotate(360deg);
     opacity: 0;
   }
+}
+
+button {
+  pointer-events: auto !important;
+  cursor: pointer;
 }
