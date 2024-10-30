@@ -56,7 +56,9 @@
         >
           <ul class="p-4">
             <li *ngFor="let game of savedGames" class="p-4 hover:bg-slate-400">
-              <p>{{ game.players.player1 }} vs {{ game.players.player2 }}</p>
+              <a [routerLink]="">
+                {{ game.players.player1 }} vs {{ game.players.player2 }}
+              </a>
             </li>
           </ul>
         </div>
