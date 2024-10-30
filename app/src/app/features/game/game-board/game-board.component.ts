@@ -1,4 +1,3 @@
-
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { GameService } from '../../../services/game.service';
@@ -8,7 +7,7 @@ import { TimerService } from '../../../services/timer.service';
 @Component({
   selector: 'app-game-board',
   templateUrl: './game-board.component.html',
-  styleUrls: ['./game-board.component.scss']
+  styleUrls: ['./game-board.component.scss'],
 })
 export class GameBoardComponent implements OnInit, OnDestroy {
   game: iGame | null = null;
@@ -16,10 +15,13 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   lastMove: iMove | null = null;
   savedGames: iGame[] = [];
   savedGamesSubscription!: Subscription;
-  isGameLoaded: boolean = false
+  isGameLoaded: boolean = false;
+  router: any;
 
-
-  constructor(public gameService: GameService, private timerService: TimerService) {}
+  constructor(
+    public gameService: GameService,
+    private timerService: TimerService
+  ) {}
 
   ngOnInit(): void {
     this.gameService.createGame();
@@ -30,14 +32,20 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
         if (game.moves.length > 0) {
           this.lastMove = game.moves[game.moves.length - 1];
-
         } else {
           this.lastMove = null;
         }
       }
     });
     this.gameService.loadSavedGames();
-    this.savedGamesSubscription = this.gameService.savedGames$.subscribe((games) => this.savedGames = games)
+    this.savedGamesSubscription = this.gameService.savedGames$.subscribe(
+      (games) => (this.savedGames = games)
+    );
+    if (this.game?.winner) {
+      setTimeout(() => {
+        this.router.navigate(['/results']);
+      }, 1000);
+    }
   }
 
   isLastMove(cell: iCell): boolean {
@@ -76,6 +84,6 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   }
 
   cancelGame(id: string) {
-    this.gameService.cancelGame(id)
+    this.gameService.cancelGame(id);
   }
 }

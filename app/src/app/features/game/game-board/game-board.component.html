@@ -50,13 +50,6 @@
           Resetta Gioco
         </button>
       </div>
-
-      <div *ngIf="game?.isGameOver" class="mt-4">
-        <p class="text-xl font-semibold">
-          <span *ngIf="game?.winner">Vince: {{ game?.winner }}</span>
-          <span *ngIf="!game?.winner">Pareggio!</span>
-        </p>
-      </div>
     </div>
   </ng-container>
 </main>
