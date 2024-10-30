@@ -64,7 +64,7 @@
         </div>
         <div class="flex justify-center flex-col items-center">
           <button
-            type="submit"
+            type="button"
             class="flex-none rounded-sm bg-indigo-400 w-2/3 py-4 text-2xl font-semibold text-white shadow-sm hover:bg-indigo-500 my-4"
             (click)="isNewGame = !isNewGame"
             *ngIf="!isNewGame && !isSavedGame"
@@ -76,12 +76,11 @@
             class="flex-none rounded-sm bg-indigo-400 w-2/3 py-4 text-2xl font-semibold text-white shadow-sm hover:bg-indigo-500"
             (click)="onSubmit()"
             *ngIf="isNewGame || isSavedGame"
-            [routerLink]="['/game']"
           >
             GIOCA
           </button>
           <button
-            type="submit"
+            type="button"
             class="flex-none rounded-sm bg-indigo-400 w-2/3 py-4 text-2xl font-semibold text-white shadow-sm hover:bg-indigo-500"
             (click)="isSavedGame = !isSavedGame"
             *ngIf="!isSavedGame && !isNewGame"
