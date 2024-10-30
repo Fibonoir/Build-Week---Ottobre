@@ -12,7 +12,8 @@
       </div>
       <div class="flex items-center">
         <h1
-          class="text-7xl text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-sky-400"
+          class="text-7xl text-center me-16 mb-12 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-sky-400 player-title"
+          [ngClass]="{}"
         >
           Player1
         </h1>
@@ -27,8 +28,8 @@
             >
               <div
                 [ngClass]="{
-                'bg-red-500': cell.occupiedBy === game.players.player1,
-                'bg-yellow-500': cell.occupiedBy === game.players.player2,
+                  'bg-red-500': cell.occupiedBy === game.players.player1,
+                  'bg-yellow-500': cell.occupiedBy === game.players.player2
                 }"
                 class="w-10 h-10 rounded-full"
               ></div>
@@ -36,7 +37,8 @@
           </div>
         </div>
         <h1
-          class="text-7xl text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-sky-400"
+          class="text-7xl ms-16 text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-sky-400 player-title"
+          [ngClass]="{}"
         >
           Player2
         </h1>
@@ -50,7 +52,6 @@
           Resetta Gioco
         </button>
       </div>
-
     </div>
   </ng-container>
 </main>
