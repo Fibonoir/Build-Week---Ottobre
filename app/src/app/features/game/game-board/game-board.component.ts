@@ -31,16 +31,17 @@ export class GameBoardComponent implements OnInit, OnDestroy {
           this.lastMove = null;
         }
       }
+      if (this.game?.winner) {
+        setTimeout(() => {
+          this.router.navigate(['/results']);
+        }, 800);
+      }
     });
     this.gameService.loadSavedGames();
     this.savedGamesSubscription = this.gameService.savedGames$.subscribe(
       (games) => (this.savedGames = games)
     );
-    if (this.game?.winner) {
-      setTimeout(() => {
-        this.router.navigate(['/results']);
-      }, 1000);
-    }
+
   }
 
   isLastMove(cell: iCell): boolean {
