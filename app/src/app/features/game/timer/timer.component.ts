@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { interval, map, Observable, of, Subscription } from 'rxjs';
 import { GameService } from '../../../services/game.service';
+import { TimerService } from '../../../services/timer.service';
 
 @Component({
   selector: 'app-timer',
@@ -15,16 +16,16 @@ export class TimerComponent implements OnInit {
   remainingSeconds!: number;
   timerSubscription!: Subscription;
 
-  constructor(private gameSvc: GameService) {}
+  constructor(private gameSvc: GameService, private timerSvc: TimerService) {}
 
   ngOnInit(): void {
     this.gameSvc.gameState$.subscribe((game) => {
-      console.log(game);
-      console.log(game?.timer);
 
 
       if (game) {
         this.timer = game.timer;
+        console.log(game);
+        console.log(game?.timer);
         // this.totalSeconds = 30; // Imposta il totale
         // this.remainingSeconds = game.timer;
          // Imposta i secondi rimanenti
