@@ -10,25 +10,28 @@
       <div>
         <app-timer></app-timer>
       </div>
-
-      <div
-        class="grid grid-cols-6 gap-1 bg-blue-500 p-2 rounded mx-auto rotate-90 neon-border"
-      >
-        <div *ngFor="let row of game?.board">
-          <div
-            *ngFor="let cell of row"
-            (click)="onColumnClick(cell.col)"
-            class="w-12 h-12 bg-white rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-200 m-1"
-          >
+      <div class="flex">
+        <h1>Player1</h1>
+        <div
+          class="grid grid-cols-6 gap-1 bg-blue-500 p-2 rounded mx-auto rotate-90 neon-border"
+        >
+          <div *ngFor="let row of game?.board">
             <div
-              [ngClass]="{
-                'bg-red-500': cell.occupiedBy === 'Player1',
-                'bg-yellow-500': cell.occupiedBy === 'Player2'
-              }"
-              class="w-10 h-10 rounded-full"
-            ></div>
+              *ngFor="let cell of row"
+              (click)="onColumnClick(cell.col)"
+              class="w-12 h-12 bg-white rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-200 m-1"
+            >
+              <div
+                [ngClass]="{
+                  'bg-red-500': cell.occupiedBy === 'Player1',
+                  'bg-yellow-500': cell.occupiedBy === 'Player2'
+                }"
+                class="w-10 h-10 rounded-full"
+              ></div>
+            </div>
           </div>
         </div>
+        <h1>Player2</h1>
       </div>
 
       <div class="mt-4">
