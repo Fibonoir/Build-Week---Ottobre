@@ -21,6 +21,6 @@ export class ResultsComponent {
 
   playAgain() {
     console.log('Bottone Gioca di nuovo cliccato');
-    this.router.navigate(['/login']);
+    this.router.navigate(['']);
   }
 }

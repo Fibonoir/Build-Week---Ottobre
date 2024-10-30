@@ -12,12 +12,12 @@
     class="absolute inset-0 flex items-center justify-center text-center p-8"
     [ngClass]="winner === 'player1' ? 'text-white' : 'text-gray-500'"
   >
-    <button
-      (click)="playAgain()"
-      class="button flex-none rounded-md bg-indigo-500 px-8 py-4 text-lg font-semibold text-white shadow-sm hover:bg-indigo-400 transition duration-300"
+    <a
+      routerLink=""
+      class="button flex-none rounded-md bg-indigo-500 px-8 py-4 text-lg font-semibold text-white shadow-sm hover:bg-indigo-400 transition duration-300 z-50"
     >
       Gioca di nuovo
-    </button>
+    </a>
   </div>
 
   <div
