@@ -42,7 +42,8 @@
               <div
                 [ngClass]="{
                   'bg-red-500': cell.occupiedBy === game.players.player1,
-                  'bg-yellow-500': cell.occupiedBy === game.players.player2
+                  'bg-yellow-500': cell.occupiedBy === game.players.player2,
+                  'animate-fall': isLastMove(cell)
                 }"
                 class="w-14 h-14 rounded-full"
               ></div>

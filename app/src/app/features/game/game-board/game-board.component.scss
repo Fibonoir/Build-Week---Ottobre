@@ -71,3 +71,19 @@ main {
     animation: expand-border 1s ease-out forwards;
   }
 }
+
+@keyframes fall {
+  0% {
+    transform: translateX(-600%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-fall {
+  animation: fall 0.4s ease-in;
+}
+
