@@ -1,3 +1,4 @@
+import { AuthGuard } from './../../guards/auth.guard';
 import { Component} from '@angular/core';
 import { GameService } from '../../services/game.service';
 import { iGame } from '../../interfaces/game';
@@ -13,20 +14,22 @@ export class LoginComponent {
   player1Name: string = "";
   player2Name: string = "";
   savedGames: iGame[] = [];
-  savedGamesSubscription!: Subscription;
   isNewGame: boolean = false;
   isSavedGame: boolean = false;
 
-  constructor(private gameService: GameService, private router: Router){}
+  constructor(public gameService: GameService, private router: Router, private authGuard: AuthGuard){}
 
   ngOnInit() {
     this.gameService.loadSavedGames();
-    this.savedGamesSubscription = this.gameService.savedGames$.subscribe((games) => this.savedGames = games)
+    this.gameService.savedGames$.subscribe((games: iGame[]) => {
+      this.savedGames = games;
+    });
 
   }
 
   selectSavedGame(gameId: string): void {
     localStorage.setItem('currentGameId', gameId);
+    this.authGuard.allowGameAccess = true;
     this.router.navigate(['/game']);
   }
 
@@ -46,6 +49,7 @@ export class LoginComponent {
         console.log('Created New Game with ID:', gameId);
 
         localStorage.setItem('currentGameId', gameId);
+        this.authGuard.allowGameAccess = true;
         this.router.navigate(['/game']);
       },
       error: (error) => {
@@ -60,5 +64,11 @@ export class LoginComponent {
   resetForm() {
     this.player1Name = ""
     this.player2Name = ""
+  }
+
+  delete(id: string) {
+    this.gameService.cancelGame(id);
+    this.gameService.loadSavedGames();
+    this.gameService.savedGames$.subscribe((games) => (this.savedGames = games));
   }
 }

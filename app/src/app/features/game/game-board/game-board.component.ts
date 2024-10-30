@@ -4,6 +4,7 @@ import { GameService } from '../../../services/game.service';
 import { iCell, iGame, iMove } from '../../../interfaces/game';
 import { TimerService } from '../../../services/timer.service';
 import { ActivatedRoute, Route, Router } from '@angular/router';
+import { AuthGuard } from '../../../guards/auth.guard';
 
 @Component({
   selector: 'app-game-board',
@@ -17,7 +18,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   savedGames: iGame[] = [];
   savedGamesSubscription!: Subscription;
 
-  constructor(public gameService: GameService, private router: Router) {}
+  constructor(public gameService: GameService, private router: Router, private authGuard: AuthGuard) {}
 
   ngOnInit(): void {
     const gameId = localStorage.getItem('currentGameId');
@@ -40,7 +41,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
           if (loadedGame.isGameOver && loadedGame.winner) {
             setTimeout(() => {
-
+              this.authGuard.allowResultsAccess = true;
               this.router.navigate(['/results']);
             }, 800);
           }

@@ -15,7 +15,7 @@ export class GameService {
   private gameStateSubject = new BehaviorSubject<iGame | null>(null);
   gameState$ = this.gameStateSubject.asObservable();
   private savedGamesSubject = new BehaviorSubject<iGame[]>([]);
-  savedGames$: Observable<iGame[]> = this.savedGamesSubject.asObservable();
+  savedGames$ = this.savedGamesSubject.asObservable();
 
   constructor(private apiService: ApiService) {
   }

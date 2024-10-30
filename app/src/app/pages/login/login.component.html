@@ -51,13 +51,30 @@
           </div>
         </div>
         <div
-          class="p-8 bg-white text-black w-1/2 rounded mx-auto my-4 overflow-y-scroll"
+          class="p-8 bg-white text-black w-1/2 rounded mx-auto my-4 overflow-y-scroll h-80 invisible-scrollbar"
           *ngIf="isSavedGame"
         >
           <ul class="p-4">
-            <li *ngFor="let game of savedGames" class="p-4 hover:bg-slate-400">
-              <a (click)="selectSavedGame(game.id)">
+            <li
+              *ngFor="let game of gameService.savedGames$ | async"
+              class="p-4 hover:bg-slate-400"
+            >
+              <a class="flex justify-between px-8">
                 {{ game.players.player1 }} vs {{ game.players.player2 }}
+                <div>
+                  <button
+                    class="px-4 py-2 bg-sky-600 text-white font-bold mx-4"
+                    (click)="selectSavedGame(game.id)"
+                  >
+                    Play
+                  </button>
+                  <button
+                    class="px-4 py-2 bg-red-600 text-white font-bold"
+                    (click)="delete(game.id)"
+                  >
+                    DELETE
+                  </button>
+                </div>
               </a>
             </li>
           </ul>
@@ -73,9 +90,9 @@
           </button>
           <button
             type="submit"
-            class="flex-none rounded-sm bg-indigo-400 w-2/3 py-4 text-2xl font-semibold text-white shadow-sm hover:bg-indigo-500"
+            class="cursor-progress flex-none rounded-sm bg-indigo-400 w-2/3 py-4 text-2xl font-semibold text-white shadow-sm hover:bg-indigo-500"
             (click)="onSubmit()"
-            *ngIf="isNewGame || isSavedGame"
+            *ngIf="isNewGame"
           >
             GIOCA
           </button>
