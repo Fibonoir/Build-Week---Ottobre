@@ -2,46 +2,30 @@
   class="relative w-full h-screen flex overflow-hidden"
   [ngClass]="winner === 'player1' ? 'bg-win-left' : 'bg-win-right'"
 >
-  <div
-    class="w-1/2 h-full flex items-center justify-center text-center p-8"
-    [ngClass]="
-      winner === 'player1'
-        ? 'bg-blue-500 text-white'
-        : 'bg-gray-300 text-gray-500'
-    "
-  >
-    <div>
-      <h1 class="text-6xl font-bold mb-4">
-        {{ winner === "player1" ? "Hai vinto!" : "Hai perso!" }}
-      </h1>
-      <p class="text-2xl">
-        {{ winner === "player1" ? "Complimenti Player 1!" : "Player 1 vince" }}
-      </p>
+  <div class="absolute top-0 left-0 p-8 text-red-600 flex flex-col items-start">
+    <div class="bg-white bg-opacity-80 p-4 rounded shadow-md">
+      <h1 class="text-4xl font-bold">Hai perso! Player 2 vince</h1>
     </div>
   </div>
 
   <div
-    class="w-1/2 h-full flex items-center justify-center text-center p-8"
+    class="absolute inset-0 flex items-center justify-center text-center p-8"
+    [ngClass]="winner === 'player1' ? 'text-white' : 'text-gray-500'"
+  ></div>
+
+  <div
+    class="w-1/2 h-full flex items-end justify-end p-8 text-center bg-win-right"
     [ngClass]="
       winner === 'player2'
         ? 'bg-red-500 text-white'
         : 'bg-gray-300 text-gray-500'
     "
   >
-    <div>
-      <h1 class="text-6xl font-bold mb-4">
-        {{ winner === "player2" ? "Hai vinto!" : "Hai perso!" }}
-      </h1>
-      <p class="text-2xl">
-        {{ winner === "player2" ? "Complimenti Player 2!" : "Player 1 vince" }}
-      </p>
+    <div class="text-right">
+      <div class="bg-white bg-opacity-80 p-4 rounded shadow-md">
+        <h1 class="text-4xl font-bold mb-4 z-30">Hai vinto! Complimenti</h1>
+      </div>
     </div>
   </div>
-
-  <div
-    *ngIf="winner"
-    class="absolute top-0 left-0 w-full h-full pointer-events-none"
-  >
-    <div class="confetti" *ngFor="let i of [].constructor(50)"></div>
-  </div>
+  <div class="diagonal-line neon-border"></div>
 </div>
