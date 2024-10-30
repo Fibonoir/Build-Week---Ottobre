@@ -20,48 +20,19 @@ export class TimerComponent implements OnInit {
 
   ngOnInit(): void {
     this.gameSvc.gameState$.subscribe((game) => {
-
-
       if (game) {
         this.timer = game.timer;
         console.log(game);
         console.log(game?.timer);
-        // this.totalSeconds = 30; // Imposta il totale
-        // this.remainingSeconds = game.timer;
-         // Imposta i secondi rimanenti
       }
     });
-
-    // this.currentPlayer$ = this.gameSvc.gameState$.pipe(
-    //   map((state) => (state ? state.currentPlayer : ''))
-    // );
-  }
-
-  ngAfterViewInit(): void {
-    this.startTimer();
-  }
-
-  ngOnDestroy(): void {
-    this.stopTimer();
-  }
-
-  startTimer(): void {
-    this.timerSubscription = interval(1000).subscribe(() => {
-      // if (this.remainingSeconds > 0) {
-      if (this.timer === 0) {
-        this.stopTimer();
-      }
-    });
-  }
-
-  stopTimer(): void {
-    if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe();
-    }
   }
 
   get timerClass(): string {
-    if (this.timer <= 5) {
+    if (this.timer <= 0) {
+      this.isPulsing = false;
+      return 'red';
+    } else if (this.timer <= 5) {
       this.isPulsing = true;
       return 'red';
     } else if (this.timer <= 10) {
