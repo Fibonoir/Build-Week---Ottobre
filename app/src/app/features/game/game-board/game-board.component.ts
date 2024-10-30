@@ -16,6 +16,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   lastMove: iMove | null = null;
   savedGames: iGame[] = [];
   savedGamesSubscription!: Subscription;
+  isGameLoaded: boolean = false
 
 
   constructor(public gameService: GameService, private timerService: TimerService) {}
@@ -25,6 +26,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     this.gameSubscription = this.gameService.gameState$.subscribe((game) => {
       if (game) {
         this.game = game;
+        this.isGameLoaded = true;
 
         if (game.moves.length > 0) {
           this.lastMove = game.moves[game.moves.length - 1];
