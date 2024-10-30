@@ -1,31 +1,34 @@
-
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { GameService } from '../../../services/game.service';
 import { iGame } from '../../../interfaces/game';
 import { TimerService } from '../../../services/timer.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-game-board',
   templateUrl: './game-board.component.html',
-  styleUrls: ['./game-board.component.scss']
+  styleUrls: ['./game-board.component.scss'],
 })
 export class GameBoardComponent implements OnInit, OnDestroy {
   game: iGame | null = null;
   gameSubscription!: Subscription;
-  isGameLoaded: boolean = false
+  isGameLoaded: boolean = false;
 
-  constructor(private gameService: GameService, private timerService: TimerService) {}
+  constructor(
+    private gameService: GameService,
+    private timerService: TimerService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.gameService.createGame();
-    this.gameSubscription = this.gameService.gameState$.subscribe(game => {
+    this.gameSubscription = this.gameService.gameState$.subscribe((game) => {
       this.isGameLoaded = true;
       // if (game) {
       //   this.timerService.startTimer(game.timer);
       // }
       this.game = game;
-
     });
   }
 
