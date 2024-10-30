@@ -1,6 +1,4 @@
 
-// export type Player = 'Player1' | 'Player2';
-
 export interface iCell {
   row: number;
   col: number;

@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { GameService } from '../../../services/game.service';
 import { iCell, iGame, iMove } from '../../../interfaces/game';
 import { TimerService } from '../../../services/timer.service';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-game-board',
@@ -15,20 +16,14 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   lastMove: iMove | null = null;
   savedGames: iGame[] = [];
   savedGamesSubscription!: Subscription;
-  isGameLoaded: boolean = false;
-  router: any;
 
-  constructor(
-    public gameService: GameService,
-    private timerService: TimerService
-  ) {}
+  constructor(public gameService: GameService, private router: Router) {}
 
   ngOnInit(): void {
     this.gameService.createGame();
     this.gameSubscription = this.gameService.gameState$.subscribe((game) => {
       if (game) {
         this.game = game;
-        this.isGameLoaded = true;
 
         if (game.moves.length > 0) {
           this.lastMove = game.moves[game.moves.length - 1];
