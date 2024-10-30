@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { interval, map, Observable, Subscription } from 'rxjs';
+import { interval, map, Observable, of, Subscription } from 'rxjs';
 import { GameService } from '../../../services/game.service';
 
 @Component({
@@ -8,7 +8,6 @@ import { GameService } from '../../../services/game.service';
   styleUrl: './timer.component.scss',
 })
 export class TimerComponent implements OnInit {
-  currentPlayer$!: Observable<string>;
   timer!: number;
   isPulsing: boolean = false;
 
@@ -20,16 +19,21 @@ export class TimerComponent implements OnInit {
 
   ngOnInit(): void {
     this.gameSvc.gameState$.subscribe((game) => {
+      console.log(game);
+      console.log(game?.timer);
+
+
       if (game) {
         this.timer = game.timer;
-        this.totalSeconds = this.timer; // Imposta il totale
-        this.remainingSeconds = this.totalSeconds; // Imposta i secondi rimanenti
+        // this.totalSeconds = 30; // Imposta il totale
+        // this.remainingSeconds = game.timer;
+         // Imposta i secondi rimanenti
       }
     });
 
-    this.currentPlayer$ = this.gameSvc.gameState$.pipe(
-      map((state) => (state ? state.currentPlayer : ''))
-    );
+    // this.currentPlayer$ = this.gameSvc.gameState$.pipe(
+    //   map((state) => (state ? state.currentPlayer : ''))
+    // );
   }
 
   ngAfterViewInit(): void {
@@ -42,9 +46,8 @@ export class TimerComponent implements OnInit {
 
   startTimer(): void {
     this.timerSubscription = interval(1000).subscribe(() => {
-      if (this.remainingSeconds > 0) {
-        this.remainingSeconds--;
-      } else {
+      // if (this.remainingSeconds > 0) {
+      if (this.timer === 0) {
         this.stopTimer();
       }
     });

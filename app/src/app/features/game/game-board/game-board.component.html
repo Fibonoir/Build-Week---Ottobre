@@ -1,5 +1,5 @@
 <main>
-  <ng-container *ngIf="isGameLoaded">
+  <ng-container *ngIf="game">
     <div class="flex flex-col items-center">
       <h1
         class="text-7xl text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-sky-400"
@@ -27,8 +27,8 @@
             >
               <div
                 [ngClass]="{
-                  'bg-red-500': cell.occupiedBy === 'Player1',
-                  'bg-yellow-500': cell.occupiedBy === 'Player2'
+                'bg-red-500': cell.occupiedBy === game.players.player1,
+                'bg-yellow-500': cell.occupiedBy === game.players.player2,
                 }"
                 class="w-10 h-10 rounded-full"
               ></div>
@@ -53,7 +53,7 @@
 
       <div *ngIf="game?.isGameOver" class="mt-4">
         <p class="text-xl font-semibold">
-          <span *ngIf="game?.winner">Vince: {{ game?.winner }}</span>
+          <span *ngIf="game?.winner">Vince: {{ game.winner }}</span>
           <span *ngIf="!game?.winner">Pareggio!</span>
         </p>
       </div>
