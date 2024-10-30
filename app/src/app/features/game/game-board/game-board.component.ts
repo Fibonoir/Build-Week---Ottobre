@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { GameService } from '../../../services/game.service';
 import { iCell, iGame, iMove } from '../../../interfaces/game';
 import { TimerService } from '../../../services/timer.service';
-import { Route, Router } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-game-board',
@@ -20,28 +20,36 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   constructor(public gameService: GameService, private router: Router) {}
 
   ngOnInit(): void {
-    this.gameService.createGame();
-    this.gameSubscription = this.gameService.gameState$.subscribe((game) => {
-      if (game) {
-        this.game = game;
+    const gameId = localStorage.getItem('currentGameId');
+    console.log(gameId);
 
-        if (game.moves.length > 0) {
-          this.lastMove = game.moves[game.moves.length - 1];
-        } else {
-          this.lastMove = null;
+    if (gameId) {
+      this.gameService.loadGame(gameId)
+      this.gameSubscription = this.gameService.gameState$.subscribe((loadedGame) => {
+
+          if(loadedGame) {
+          this.game = loadedGame;
+
+
+          if (loadedGame.moves.length > 0) {
+            this.game.currentPlayer === loadedGame.moves[loadedGame.moves.length - 1].player
+            this.lastMove = loadedGame.moves[loadedGame.moves.length - 1];
+          } else {
+            this.lastMove = null;
+          }
+
+          if (loadedGame.isGameOver && loadedGame.winner) {
+            setTimeout(() => {
+
+              this.router.navigate(['/results']);
+            }, 800);
+          }
         }
-      }
-      if (this.game?.winner) {
-        setTimeout(() => {
-          this.router.navigate(['/results']);
-        }, 800);
-      }
-    });
-    this.gameService.loadSavedGames();
-    this.savedGamesSubscription = this.gameService.savedGames$.subscribe(
-      (games) => (this.savedGames = games)
-    );
 
+      });
+    } else {
+      this.router.navigate(['']);
+    }
   }
 
   isLastMove(cell: iCell): boolean {

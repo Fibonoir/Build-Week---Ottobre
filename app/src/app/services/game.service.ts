@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, tap, throwError } from 'rxjs';
 import { ApiService } from './api.service';
 import { iCell, iGame, iMove, iPlayers } from '../interfaces/game';
 
@@ -47,7 +47,7 @@ export class GameService {
 
 
 
-  loadGame(gameId: number): void {
+  loadGame(gameId: string): void {
     this.apiService.get<iGame>(`${gameId}`).subscribe({
       next: (response: iGame) => {
           this.gameStateSubject.next(response);
@@ -63,7 +63,7 @@ export class GameService {
     this.players = players
   }
 
-  createGame(): void {
+  createGame(): Observable<string>{
     const newGame: Partial<iGame> = {
       board: this.createEmptyBoard(),
       players: this.players,
@@ -72,21 +72,25 @@ export class GameService {
       isGameOver: false,
       winner: null,
       moves: [],
-    };
-    this.apiService.post<iGame>(newGame).subscribe({
-      next: (response: iGame) => {
+    }
+    return this.apiService.post<iGame>(newGame).pipe(
+      tap((response: iGame) => {
         if (response) {
           this.gameStateSubject.next(response);
         }
-      },
-      error: (error) => {
+      }),
+      map((response: iGame) => response.id),
+      catchError((error) => {
         console.error('Errore nella creazione della partita:', error);
-      }
-    });
+        return throwError(() => new Error(error));
+      })
+    );
   }
 
   makeMove(col: number): void {
     const state = this.gameStateSubject.value;
+    console.log("THIS IS THE STATE ", state);
+
     if (!state || state.isGameOver) {
       return;
     }
@@ -118,7 +122,7 @@ export class GameService {
           winner = null; // Pareggio
         }
 
-        const nextPlayer: string = state.currentPlayer === this.players.player1 ? this.players.player2 : this.players.player1;
+        const nextPlayer: string = state.currentPlayer === state.players.player1 ? state.players.player2 : state.players.player1;
 
         const updatedGame: iGame = {
           ...state,
