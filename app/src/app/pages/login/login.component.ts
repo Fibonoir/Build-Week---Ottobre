@@ -18,7 +18,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   savedGames: iGame[] = [];
   isNewGame: boolean = false;
   isSavedGame: boolean = false;
-  isAgainstAI: boolean = false; // New property to track game mode
+  isAgainstAI: boolean = false;
+  isLoading: boolean = false;
 
   private savedGamesSubscription!: Subscription;
 
@@ -41,6 +42,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.isNewGame) {
       this.createNewGame();
     }
+    this.isLoading = true;
   }
 
 
