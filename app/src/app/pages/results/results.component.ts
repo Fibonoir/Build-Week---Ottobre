@@ -13,29 +13,25 @@ export class ResultsComponent {
   loser!: string | null | undefined;
   game!: iGame | null;
 
-  constructor(private gameService: GameService, private router: Router){}
+  constructor(private gameService: GameService, private router: Router) {}
 
-  ngOnInit(){
-    const currentGame = localStorage.getItem("currentGameId")
+  ngOnInit() {
+    const currentGame = localStorage.getItem('currentGameId');
 
     this.gameService.gameState$.subscribe((game) => {
-      console.log(game);
       this.winner = game?.winner;
-      if(game?.players.player1 === this.winner){
-        this.loser = game?.players.player2
+      if (game?.players.player1 === this.winner) {
+        this.loser = game?.players.player2;
       } else {
-        this.loser = game?.players.player1
+        this.loser = game?.players.player1;
       }
       this.game = game;
-
-    })
-    if(!currentGame) {
-      this.router.navigate([""])
+    });
+    if (!currentGame) {
+      this.router.navigate(['']);
     } else {
-    localStorage.removeItem("currentGameId");
+      localStorage.removeItem('currentGameId');
     }
-
-
   }
 
   getResultMessage() {

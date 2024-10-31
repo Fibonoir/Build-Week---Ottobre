@@ -1,12 +1,19 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, tap, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  map,
+  Observable,
+  tap,
+  throwError,
+} from 'rxjs';
 import { ApiService } from './api.service';
 import { iCell, iGame, iMove, iPlayers } from '../interfaces/game';
 import { v4 as uuidv4 } from 'uuid';
 
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GameService {
   private initialRows: number = 6;
@@ -24,8 +31,7 @@ export class GameService {
   private savedGamesSubject = new BehaviorSubject<iGame[]>([]);
   savedGames$ = this.savedGamesSubject.asObservable();
 
-  constructor(private apiService: ApiService) {
-  }
+  constructor(private apiService: ApiService) {}
 
   private createEmptyBoard(): iCell[][] {
     const board: iCell[][] = [];
@@ -39,7 +45,6 @@ export class GameService {
     return board;
   }
 
-
   loadSavedGames(): void {
     this.apiService.getSavedGames<iGame[]>().subscribe({
       next: (res: iGame[]) => {
@@ -47,22 +52,18 @@ export class GameService {
       },
       error: (err) => {
         console.error('Error loading saved games:', err);
-      }
+      },
     });
   }
-
-
-
 
   loadGame(gameId: string): void {
     this.apiService.get<iGame>(`${gameId}`).subscribe({
       next: (response: iGame) => {
-          this.gameStateSubject.next(response);
-
+        this.gameStateSubject.next(response);
       },
       error: (error) => {
         console.error('Errore nel caricamento della partita:', error);
-      }
+      },
     });
   }
 
@@ -88,7 +89,6 @@ export class GameService {
       winner: null,
       moves: [],
     };
-
     return this.apiService.post<iGame>(newGame).pipe(
       tap((response: iGame) => {
         if (response) {
@@ -138,7 +138,7 @@ export class GameService {
           gameId: state.id,
           player: player,
           column: col,
-          timestamp: new Date()
+          timestamp: new Date(),
         };
 
         const updatedMoves = [...state.moves, newMove];
@@ -163,7 +163,7 @@ export class GameService {
           timer: this.initialTimer,
           isGameOver,
           winner,
-          moves: updatedMoves
+          moves: updatedMoves,
         };
 
         // Update the game state in the backend
@@ -182,7 +182,7 @@ export class GameService {
           },
           error: (error) => {
             console.error('Error updating game:', error);
-          }
+          },
         });
 
         return;
@@ -387,7 +387,7 @@ export class GameService {
 
 
   private isBoardFull(board: iCell[][]): boolean {
-    return board[0].every(cell => cell.occupiedBy !== null);
+    return board[0].every((cell) => cell.occupiedBy !== null);
   }
 
 
@@ -427,7 +427,9 @@ export class GameService {
 
 
   private isValidCell(row: number, col: number): boolean {
-    return row >= 0 && row < this.initialRows && col >= 0 && col < this.initialCols;
+    return (
+      row >= 0 && row < this.initialRows && col >= 0 && col < this.initialCols
+    );
   }
 
   resetGame(): void {
@@ -437,11 +439,11 @@ export class GameService {
     const resetGame: iGame = {
       ...state,
       board: this.createEmptyBoard(),
-      currentPlayer: "player1",
+      currentPlayer: 'player1',
       timer: this.initialTimer,
       isGameOver: false,
       winner: null,
-      moves: []
+      moves: [],
     };
 
     this.apiService.put<iGame>(`${state.id}`, resetGame).subscribe({
@@ -452,7 +454,7 @@ export class GameService {
       },
       error: (error) => {
         console.error('Errore nel reset della partita:', error);
-      }
+      },
     });
   }
 
@@ -463,7 +465,7 @@ export class GameService {
     const updatedGame: iGame = {
       ...state,
       isGameOver: true,
-      winner
+      winner,
     };
 
     this.apiService.put<iGame>(`${state.id}`, updatedGame).subscribe({
@@ -473,8 +475,8 @@ export class GameService {
         }
       },
       error: (error) => {
-        console.error('Errore nell\'aggiornamento del vincitore:', error);
-      }
+        console.error("Errore nell'aggiornamento del vincitore:", error);
+      },
     });
   }
 
@@ -497,8 +499,6 @@ export class GameService {
   }
 
   cancelGame(id: string) {
-    this.apiService.delete<iGame>(id).subscribe()
-
+    this.apiService.delete<iGame>(id).subscribe();
   }
-
 }
