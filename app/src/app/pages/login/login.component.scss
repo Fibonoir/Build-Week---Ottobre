@@ -11,6 +11,11 @@ main {
   background-color: rgb(99 70 239 / 41%);
 }
 
+.stroke {
+  -webkit-text-stroke: 0.5px white;
+
+}
+
 @keyframes neon-border {
   0% {
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.8),
@@ -41,8 +46,6 @@ main {
 
 .neon-border {
   position: relative;
-  padding: 20px;
-  background-color: rgb(99 70 239 / 41%);
   color: black;
   text-align: center;
   border-radius: 12px;
