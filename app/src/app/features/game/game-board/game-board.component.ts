@@ -17,7 +17,6 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   lastMove: iMove | null = null;
   savedGames: iGame[] = [];
   savedGamesSubscription!: Subscription;
-  players: iPlayers = { player1: '', player2: '' };
 
   constructor(
     public gameService: GameService,
@@ -27,10 +26,6 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const gameId = localStorage.getItem('currentGameId');
-    console.log(gameId);
-
-    this.players = this.gameService.players;
-    console.log('giocatori', this.players);
 
     if (gameId) {
       this.gameService.loadGame(gameId);
@@ -77,9 +72,6 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
   onColumnClick(col: number): void {
     if (this.game && !this.game.isGameOver) {
-      console.log(col);
-      //just for debugging
-
       this.gameService.makeMove(col);
     }
   }

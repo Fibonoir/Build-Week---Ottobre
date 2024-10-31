@@ -1,10 +1,17 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, tap, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  map,
+  Observable,
+  tap,
+  throwError,
+} from 'rxjs';
 import { ApiService } from './api.service';
 import { iCell, iGame, iMove, iPlayers } from '../interfaces/game';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GameService {
   private initialRows: number = 6;
@@ -17,8 +24,7 @@ export class GameService {
   private savedGamesSubject = new BehaviorSubject<iGame[]>([]);
   savedGames$ = this.savedGamesSubject.asObservable();
 
-  constructor(private apiService: ApiService) {
-  }
+  constructor(private apiService: ApiService) {}
 
   private createEmptyBoard(): iCell[][] {
     const board: iCell[][] = [];
@@ -32,7 +38,6 @@ export class GameService {
     return board;
   }
 
-
   loadSavedGames(): void {
     this.apiService.getSavedGames<iGame[]>().subscribe({
       next: (res: iGame[]) => {
@@ -40,30 +45,26 @@ export class GameService {
       },
       error: (err) => {
         console.error('Error loading saved games:', err);
-      }
+      },
     });
   }
-
-
-
 
   loadGame(gameId: string): void {
     this.apiService.get<iGame>(`${gameId}`).subscribe({
       next: (response: iGame) => {
-          this.gameStateSubject.next(response);
-
+        this.gameStateSubject.next(response);
       },
       error: (error) => {
         console.error('Errore nel caricamento della partita:', error);
-      }
+      },
     });
   }
 
   setPlayers(players: iPlayers): void {
-    this.players = players
+    this.players = players;
   }
 
-  createGame(): Observable<string>{
+  createGame(): Observable<string> {
     const newGame: Partial<iGame> = {
       board: this.createEmptyBoard(),
       players: this.players,
@@ -72,7 +73,7 @@ export class GameService {
       isGameOver: false,
       winner: null,
       moves: [],
-    }
+    };
     return this.apiService.post<iGame>(newGame).pipe(
       tap((response: iGame) => {
         if (response) {
@@ -89,7 +90,6 @@ export class GameService {
 
   makeMove(col: number): void {
     const state = this.gameStateSubject.value;
-    console.log("THIS IS THE STATE ", state);
 
     if (!state || state.isGameOver) {
       return;
@@ -98,7 +98,7 @@ export class GameService {
     // Trova la prima cella libera dalla base
     for (let row = this.initialRows - 1; row >= 0; row--) {
       if (!state.board[row][col].occupiedBy) {
-        const updatedBoard = state.board.map(r => r.map(c => ({ ...c })));
+        const updatedBoard = state.board.map((r) => r.map((c) => ({ ...c })));
         updatedBoard[row][col].occupiedBy = state.currentPlayer;
 
         const newMove: iMove = {
@@ -106,7 +106,7 @@ export class GameService {
           gameId: state.id,
           player: state.currentPlayer,
           column: col,
-          timestamp: new Date()
+          timestamp: new Date(),
         };
 
         const updatedMoves = [...state.moves, newMove];
@@ -122,7 +122,10 @@ export class GameService {
           winner = null; // Pareggio
         }
 
-        const nextPlayer: string = state.currentPlayer === state.players.player1 ? state.players.player2 : state.players.player1;
+        const nextPlayer: string =
+          state.currentPlayer === state.players.player1
+            ? state.players.player2
+            : state.players.player1;
 
         const updatedGame: iGame = {
           ...state,
@@ -131,7 +134,7 @@ export class GameService {
           timer: this.initialTimer,
           isGameOver,
           winner,
-          moves: updatedMoves
+          moves: updatedMoves,
         };
 
         console.log('Updating game with move:', updatedGame);
@@ -145,7 +148,7 @@ export class GameService {
           },
           error: (error) => {
             console.error('Error updating game:', error);
-          }
+          },
         });
 
         return;
@@ -153,23 +156,35 @@ export class GameService {
     }
 
     // Se la colonna è piena, puoi mostrare un messaggio o gestire l'errore
-    console.warn('Colonna piena. Scegli un\'altra colonna.');
+    console.warn("Colonna piena. Scegli un'altra colonna.");
   }
 
   private isBoardFull(board: iCell[][]): boolean {
-    return board[0].every(cell => cell.occupiedBy !== null);
+    return board[0].every((cell) => cell.occupiedBy !== null);
   }
 
-  private checkWin(board: iCell[][], row: number, col: number, player: string): boolean {
+  private checkWin(
+    board: iCell[][],
+    row: number,
+    col: number,
+    player: string
+  ): boolean {
     return (
       this.checkDirection(board, row, col, player, 0, 1) || // Orizzontale
       this.checkDirection(board, row, col, player, 1, 0) || // Verticale
       this.checkDirection(board, row, col, player, 1, 1) || // Diagonale positiva
-      this.checkDirection(board, row, col, player, 1, -1)   // Diagonale negativa
+      this.checkDirection(board, row, col, player, 1, -1) // Diagonale negativa
     );
   }
 
-  private checkDirection(board: iCell[][], row: number, col: number, player: string, deltaRow: number, deltaCol: number): boolean {
+  private checkDirection(
+    board: iCell[][],
+    row: number,
+    col: number,
+    player: string,
+    deltaRow: number,
+    deltaCol: number
+  ): boolean {
     let count = 1;
 
     // Controlla in una direzione
@@ -194,7 +209,9 @@ export class GameService {
   }
 
   private isValidCell(row: number, col: number): boolean {
-    return row >= 0 && row < this.initialRows && col >= 0 && col < this.initialCols;
+    return (
+      row >= 0 && row < this.initialRows && col >= 0 && col < this.initialCols
+    );
   }
 
   resetGame(): void {
@@ -204,11 +221,11 @@ export class GameService {
     const resetGame: iGame = {
       ...state,
       board: this.createEmptyBoard(),
-      currentPlayer: "player1",
+      currentPlayer: 'player1',
       timer: this.initialTimer,
       isGameOver: false,
       winner: null,
-      moves: []
+      moves: [],
     };
 
     this.apiService.put<iGame>(`${state.id}`, resetGame).subscribe({
@@ -219,7 +236,7 @@ export class GameService {
       },
       error: (error) => {
         console.error('Errore nel reset della partita:', error);
-      }
+      },
     });
   }
 
@@ -230,7 +247,7 @@ export class GameService {
     const updatedGame: iGame = {
       ...state,
       isGameOver: true,
-      winner
+      winner,
     };
 
     this.apiService.put<iGame>(`${state.id}`, updatedGame).subscribe({
@@ -240,8 +257,8 @@ export class GameService {
         }
       },
       error: (error) => {
-        console.error('Errore nell\'aggiornamento del vincitore:', error);
-      }
+        console.error("Errore nell'aggiornamento del vincitore:", error);
+      },
     });
   }
 
@@ -264,8 +281,6 @@ export class GameService {
   }
 
   cancelGame(id: string) {
-    this.apiService.delete<iGame>(id).subscribe()
-
+    this.apiService.delete<iGame>(id).subscribe();
   }
-
 }
