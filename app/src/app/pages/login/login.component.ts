@@ -13,8 +13,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  player1Name: string = "";
-  player2Name: string = "";
+  player1Name: string = '';
+  player2Name: string = '';
   savedGames: iGame[] = [];
   isNewGame: boolean = false;
   isSavedGame: boolean = false;
@@ -27,34 +27,44 @@ export class LoginComponent implements OnInit, OnDestroy {
     public gameService: GameService,
     private router: Router,
     private authGuard: AuthGuard
-  ){}
+  ) {}
 
   ngOnInit() {
     this.gameService.loadSavedGames();
-    this.savedGamesSubscription = this.gameService.savedGames$.subscribe((games: iGame[]) => {
-      this.savedGames = games.filter((game) => game.isGameOver === false);
-    });
+    this.savedGamesSubscription = this.gameService.savedGames$.subscribe(
+      (games: iGame[]) => {
+        this.savedGames = games.filter((game) => game.isGameOver === false);
+      }
+    );
   }
-
-
 
   onSubmit() {
     if (this.isNewGame) {
+      if (
+        !this.player1Name.trim() ||
+        (!this.player2Name.trim() && !this.isAgainstAI)
+      ) {
+        alert('Inserisci i nomi dei giocatori');
+        return;
+      }
+
+      this.isLoading = true;
       this.createNewGame();
     }
-    this.isLoading = true;
   }
 
-
   createNewGame(): void {
-    if (!this.player1Name.trim() || (!this.player2Name.trim() && !this.isAgainstAI)) {
+    if (
+      !this.player1Name.trim() ||
+      (!this.player2Name.trim() && !this.isAgainstAI)
+    ) {
       alert('Inserisci i nomi dei giocatori');
       return;
     }
 
     const players: iPlayers = {
       player1: this.player1Name.trim(),
-      player2: this.isAgainstAI ? 'Computer' : this.player2Name.trim()
+      player2: this.isAgainstAI ? 'Computer' : this.player2Name.trim(),
     };
 
     this.gameService.setPlayers(players);
@@ -71,12 +81,11 @@ export class LoginComponent implements OnInit, OnDestroy {
       error: (error) => {
         console.error('Error creating new game:', error);
         alert('Errore nella creazione della partita. Riprova.');
-      }
+      },
     });
 
     this.resetForm();
   }
-
 
   selectSavedGame(game: iGame): void {
     localStorage.setItem('currentGameId', game.id);
@@ -85,12 +94,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.isLoading = true;
   }
 
-
   toggleNewGame(): void {
     this.isNewGame = true;
     this.isSavedGame = false;
   }
-
 
   toggleSavedGame(): void {
     this.isSavedGame = true;
@@ -103,27 +110,27 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   resetForm() {
-    this.player1Name = ""
-    this.player2Name = ""
+    this.player1Name = '';
+    this.player2Name = '';
     this.isAgainstAI = false; // Reset game mode selection
   }
-
 
   delete(id: string) {
     this.gameService.cancelGame(id).subscribe({
       next: () => {
-      this.gameService.loadSavedGames();
-      this.savedGamesSubscription = this.gameService.savedGames$.subscribe((games) => {
-        this.savedGames = games.filter((game) => game.isGameOver === false);
-      });
+        this.gameService.loadSavedGames();
+        this.savedGamesSubscription = this.gameService.savedGames$.subscribe(
+          (games) => {
+            this.savedGames = games.filter((game) => game.isGameOver === false);
+          }
+        );
       },
       error: (error) => {
-      console.error('Error cancelling game:', error);
-      alert('Errore nella cancellazione della partita. Riprova.');
-      }
+        console.error('Error cancelling game:', error);
+        alert('Errore nella cancellazione della partita. Riprova.');
+      },
     });
   }
-
 
   toggleAI(): void {
     this.isAgainstAI = !this.isAgainstAI;

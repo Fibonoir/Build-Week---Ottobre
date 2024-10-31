@@ -9,8 +9,6 @@ import {
 } from 'rxjs';
 import { ApiService } from './api.service';
 import { iCell, iGame, iMove, iPlayers } from '../interfaces/game';
-import { v4 as uuidv4 } from 'uuid';
-
 
 @Injectable({
   providedIn: 'root',
@@ -75,7 +73,6 @@ export class GameService {
   createGame(isAgainstAI: boolean = false): Observable<string> {
     this.isAgainstAI = isAgainstAI; // Set the opponent type
 
-
     const newGame: Partial<iGame> = {
       board: this.createEmptyBoard(),
       players: this.players,
@@ -115,7 +112,6 @@ export class GameService {
     }
   }
 
-
   makeMove(col: number, player: string = this.HUMAN_PLAYER): void {
     const state = this.gameStateSubject.value;
 
@@ -126,7 +122,7 @@ export class GameService {
     // Find the first available row in the selected column
     for (let row = this.initialRows - 1; row >= 0; row--) {
       if (!state.board[row][col].occupiedBy) {
-        const updatedBoard = state.board.map(r => r.map(c => ({ ...c })));
+        const updatedBoard = state.board.map((r) => r.map((c) => ({ ...c })));
         updatedBoard[row][col].occupiedBy = state.currentPlayer;
 
         const newMove: iMove = {
@@ -150,7 +146,10 @@ export class GameService {
           winner = null; // Draw
         }
 
-        const nextPlayer: string = state.currentPlayer === state.players.player1 ? state.players.player2 : state.players.player1;
+        const nextPlayer: string =
+          state.currentPlayer === state.players.player1
+            ? state.players.player2
+            : state.players.player1;
 
         const updatedGame: iGame = {
           ...state,
@@ -169,7 +168,11 @@ export class GameService {
               this.gameStateSubject.next(response);
 
               // If the next player is AI, initiate AI move
-              if (this.isAgainstAI && response.currentPlayer === this.AI_PLAYER && !response.isGameOver) {
+              if (
+                this.isAgainstAI &&
+                response.currentPlayer === this.AI_PLAYER &&
+                !response.isGameOver
+              ) {
                 setTimeout(() => {
                   this.initiateAIMove();
                 }, 500); // Optional delay for better UX
@@ -186,7 +189,7 @@ export class GameService {
     }
 
     // If the column is full, you can show a message or handle the error
-    console.warn('Colonna piena. Scegli un\'altra colonna.');
+    console.warn("Colonna piena. Scegli un'altra colonna.");
   }
 
   private getBestMove(board: iCell[][]): number {
@@ -196,7 +199,7 @@ export class GameService {
     for (let col = 0; col < this.initialCols; col++) {
       if (board[0][col].occupiedBy === null) {
         // Clone the board
-        const tempBoard = board.map(r => r.map(c => ({ ...c })));
+        const tempBoard = board.map((r) => r.map((c) => ({ ...c })));
 
         // Simulate the move
         let rowToPlace = -1;
@@ -210,7 +213,13 @@ export class GameService {
 
         if (rowToPlace === -1) continue; // Column is full
 
-        const score = this.minimax(tempBoard, this.MAX_DEPTH - 1, -Infinity, Infinity, false);
+        const score = this.minimax(
+          tempBoard,
+          this.MAX_DEPTH - 1,
+          -Infinity,
+          Infinity,
+          false
+        );
 
         // Undo the move
         tempBoard[rowToPlace][col].occupiedBy = null;
@@ -225,7 +234,13 @@ export class GameService {
     return bestMove;
   }
 
-  private minimax(board: iCell[][], depth: number, alpha: number, beta: number, isMaximizing: boolean): number {
+  private minimax(
+    board: iCell[][],
+    depth: number,
+    alpha: number,
+    beta: number,
+    isMaximizing: boolean
+  ): number {
     if (depth === 0 || this.isBoardFull(board)) {
       return this.evaluateBoard(board);
     }
@@ -235,7 +250,7 @@ export class GameService {
       for (let col = 0; col < this.initialCols; col++) {
         if (board[0][col].occupiedBy === null) {
           // Clone the board
-          const tempBoard = board.map(r => r.map(c => ({ ...c })));
+          const tempBoard = board.map((r) => r.map((c) => ({ ...c })));
 
           // Simulate the move
           let rowToPlace = -1;
@@ -254,7 +269,13 @@ export class GameService {
             return 1000 + depth; // Prefer faster wins
           }
 
-          const evalScore = this.minimax(tempBoard, depth - 1, alpha, beta, false);
+          const evalScore = this.minimax(
+            tempBoard,
+            depth - 1,
+            alpha,
+            beta,
+            false
+          );
           maxEval = Math.max(maxEval, evalScore);
           alpha = Math.max(alpha, evalScore);
           if (beta <= alpha) {
@@ -268,7 +289,7 @@ export class GameService {
       for (let col = 0; col < this.initialCols; col++) {
         if (board[0][col].occupiedBy === null) {
           // Clone the board
-          const tempBoard = board.map(r => r.map(c => ({ ...c })));
+          const tempBoard = board.map((r) => r.map((c) => ({ ...c })));
 
           // Simulate the move
           let rowToPlace = -1;
@@ -287,7 +308,13 @@ export class GameService {
             return -1000 - depth; // Prefer faster losses
           }
 
-          const evalScore = this.minimax(tempBoard, depth - 1, alpha, beta, true);
+          const evalScore = this.minimax(
+            tempBoard,
+            depth - 1,
+            alpha,
+            beta,
+            true
+          );
           minEval = Math.min(minEval, evalScore);
           beta = Math.min(beta, evalScore);
           if (beta <= alpha) {
@@ -314,7 +341,7 @@ export class GameService {
 
     // Score horizontal
     for (let row = 0; row < this.initialRows; row++) {
-      const rowArray = board[row].map(cell => cell.occupiedBy);
+      const rowArray = board[row].map((cell) => cell.occupiedBy);
       for (let col = 0; col < this.initialCols - 3; col++) {
         const window = rowArray.slice(col, col + 4);
         score += this.evaluateWindow(window);
@@ -323,7 +350,7 @@ export class GameService {
 
     // Score vertical
     for (let col = 0; col < this.initialCols; col++) {
-      const colArray = board.map(row => row[col].occupiedBy);
+      const colArray = board.map((row) => row[col].occupiedBy);
       for (let row = 0; row < this.initialRows - 3; row++) {
         const window = colArray.slice(row, row + 4);
         score += this.evaluateWindow(window);
@@ -337,7 +364,7 @@ export class GameService {
           board[row][col].occupiedBy,
           board[row + 1][col + 1].occupiedBy,
           board[row + 2][col + 2].occupiedBy,
-          board[row + 3][col + 3].occupiedBy
+          board[row + 3][col + 3].occupiedBy,
         ];
         score += this.evaluateWindow(window);
       }
@@ -350,7 +377,7 @@ export class GameService {
           board[row][col].occupiedBy,
           board[row - 1][col + 1].occupiedBy,
           board[row - 2][col + 2].occupiedBy,
-          board[row - 3][col + 3].occupiedBy
+          board[row - 3][col + 3].occupiedBy,
         ];
         score += this.evaluateWindow(window);
       }
@@ -362,9 +389,11 @@ export class GameService {
   private evaluateWindow(window: (string | null)[]): number {
     let score = 0;
 
-    const aiCount = window.filter(cell => cell === this.AI_PLAYER).length;
-    const humanCount = window.filter(cell => cell === this.HUMAN_PLAYER).length;
-    const emptyCount = window.filter(cell => cell === null).length;
+    const aiCount = window.filter((cell) => cell === this.AI_PLAYER).length;
+    const humanCount = window.filter(
+      (cell) => cell === this.HUMAN_PLAYER
+    ).length;
+    const emptyCount = window.filter((cell) => cell === null).length;
 
     if (aiCount === 4) {
       score += 100;
@@ -381,23 +410,32 @@ export class GameService {
     return score;
   }
 
-
   private isBoardFull(board: iCell[][]): boolean {
     return board[0].every((cell) => cell.occupiedBy !== null);
   }
 
-
-  private checkWin(board: iCell[][], row: number, col: number, player: string): boolean {
+  private checkWin(
+    board: iCell[][],
+    row: number,
+    col: number,
+    player: string
+  ): boolean {
     return (
       this.checkDirection(board, row, col, player, 0, 1) || // Horizontal
       this.checkDirection(board, row, col, player, 1, 0) || // Vertical
       this.checkDirection(board, row, col, player, 1, 1) || // Positive Diagonal
-      this.checkDirection(board, row, col, player, 1, -1)   // Negative Diagonal
+      this.checkDirection(board, row, col, player, 1, -1) // Negative Diagonal
     );
   }
 
-
-  private checkDirection(board: iCell[][], row: number, col: number, player: string, deltaRow: number, deltaCol: number): boolean {
+  private checkDirection(
+    board: iCell[][],
+    row: number,
+    col: number,
+    player: string,
+    deltaRow: number,
+    deltaCol: number
+  ): boolean {
     let count = 1;
 
     // Check in the positive direction
@@ -420,7 +458,6 @@ export class GameService {
 
     return count >= 4;
   }
-
 
   private isValidCell(row: number, col: number): boolean {
     return (
