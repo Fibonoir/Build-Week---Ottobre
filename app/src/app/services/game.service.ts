@@ -494,7 +494,7 @@ export class GameService {
     return this.gameStateSubject.value;
   }
 
-  cancelGame(id: string) {
-    this.apiService.delete<iGame>(id).subscribe();
+  cancelGame(id: string): Observable<iGame> {
+    return this.apiService.delete<iGame>(id);
   }
 }

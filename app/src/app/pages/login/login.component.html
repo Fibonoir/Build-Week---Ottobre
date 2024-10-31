@@ -26,7 +26,7 @@
         </button>
         <button
           class="rounded-sm bg-slate-900 p-4 font-semibold text-white shadow-sm hover:bg-black flex items-center"
-          (click)="toggleNewGame()"
+          (click)="goBack()"
           *ngIf="isSavedGame || isNewGame"
         >
           TORNA INDIETRO
@@ -44,6 +44,7 @@
             class="border border-gray-300 rounded p-4 w-full"
             placeholder="Player 1"
           />
+        </div>
 
         <div class="mb-6" *ngIf="!isAgainstAI">
           <input
@@ -89,7 +90,14 @@
             <span
               >{{ game.players.player1 }} vs {{ game.players.player2 }}</span
             >
-            <span class="text-sm text-gray-500">ID: {{ game.id }}</span>
+            <span class="text-sm text-gray-500"
+              >ID: {{ game.id }}
+              <span
+                (click)="delete(game.id); $event.stopPropagation()"
+                class="bg-red-500 text-white font-bold px-4 py-2 rounded-sm z-40"
+                >DELETE</span
+              ></span
+            >
           </li>
         </ul>
         <p *ngIf="savedGames.length === 0" class="text-center text-gray-500">

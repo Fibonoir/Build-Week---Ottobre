@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.gameService.loadSavedGames();
     this.savedGamesSubscription = this.gameService.savedGames$.subscribe((games: iGame[]) => {
-      this.savedGames = games;
+      this.savedGames = games.filter((game) => game.isGameOver === false);
     });
   }
 
@@ -94,6 +94,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.isNewGame = false;
   }
 
+  goBack(): void {
+    this.isNewGame = false;
+    this.isSavedGame = false;
+  }
 
   resetForm() {
     this.player1Name = ""
@@ -103,9 +107,18 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
   delete(id: string) {
-    this.gameService.cancelGame(id);
-    this.gameService.loadSavedGames();
-    this.gameService.savedGames$.subscribe((games) => (this.savedGames = games));
+    this.gameService.cancelGame(id).subscribe({
+      next: () => {
+      this.gameService.loadSavedGames();
+      this.savedGamesSubscription = this.gameService.savedGames$.subscribe((games) => {
+        this.savedGames = games.filter((game) => game.isGameOver === false);
+      });
+      },
+      error: (error) => {
+      console.error('Error cancelling game:', error);
+      alert('Errore nella cancellazione della partita. Riprova.');
+      }
+    });
   }
 
 
