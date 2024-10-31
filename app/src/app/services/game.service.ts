@@ -24,7 +24,7 @@ export class GameService {
 
   private readonly MAX_DEPTH: number = 4; // Adjust based on performance needs
   private AI_PLAYER: string = 'Computer';
-  private HUMAN_PLAYER: string = '';
+  HUMAN_PLAYER: string = '';
 
   private gameStateSubject = new BehaviorSubject<iGame | null>(null);
   gameState$ = this.gameStateSubject.asObservable();
@@ -75,15 +75,11 @@ export class GameService {
   createGame(isAgainstAI: boolean = false): Observable<string> {
     this.isAgainstAI = isAgainstAI; // Set the opponent type
 
-    const players: iPlayers = {
-      player1: this.players.player1,
-      player2: isAgainstAI ? 'Computer' : this.players.player2
-    };
 
     const newGame: Partial<iGame> = {
       board: this.createEmptyBoard(),
-      players: players,
-      currentPlayer: players.player1,
+      players: this.players,
+      currentPlayer: this.players.player1,
       timer: this.initialTimer,
       isGameOver: false,
       winner: null,
@@ -131,12 +127,12 @@ export class GameService {
     for (let row = this.initialRows - 1; row >= 0; row--) {
       if (!state.board[row][col].occupiedBy) {
         const updatedBoard = state.board.map(r => r.map(c => ({ ...c })));
-        updatedBoard[row][col].occupiedBy = player;
+        updatedBoard[row][col].occupiedBy = state.currentPlayer;
 
         const newMove: iMove = {
           id: state.moves.length + 1,
           gameId: state.id,
-          player: player,
+          player: state.currentPlayer,
           column: col,
           timestamp: new Date(),
         };
@@ -154,7 +150,7 @@ export class GameService {
           winner = null; // Draw
         }
 
-        const nextPlayer: string = player === state.players.player1 ? state.players.player2 : state.players.player1;
+        const nextPlayer: string = state.currentPlayer === state.players.player1 ? state.players.player2 : state.players.player1;
 
         const updatedGame: iGame = {
           ...state,
@@ -176,7 +172,7 @@ export class GameService {
               if (this.isAgainstAI && response.currentPlayer === this.AI_PLAYER && !response.isGameOver) {
                 setTimeout(() => {
                   this.initiateAIMove();
-                }, 500); // Optional delay for better UX
+                }, 1000); // Optional delay for better UX
               }
             }
           },
@@ -439,7 +435,7 @@ export class GameService {
     const resetGame: iGame = {
       ...state,
       board: this.createEmptyBoard(),
-      currentPlayer: 'player1',
+      currentPlayer: this.players.player1,
       timer: this.initialTimer,
       isGameOver: false,
       winner: null,

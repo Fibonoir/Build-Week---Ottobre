@@ -1,10 +1,9 @@
-// src/app/game/components/game-board/game-board.component.ts
-
+import { GameService } from './../../../services/game.service';
+import { AuthGuard } from './../../../guards/auth.guard';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { iCell, iGame, iMove } from '../../../interfaces/game';
-import { GameService } from '../../../services/game.service';
 
 @Component({
   selector: 'app-game-board',
@@ -18,13 +17,12 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   savedGames: iGame[] = [];
   savedGamesSubscription!: Subscription;
 
-  constructor(public gameService: GameService, private router: Router) {}
+  constructor(public gameService: GameService, private router: Router, private authGuard: AuthGuard) {}
 
   ngOnInit(): void {
     const gameId = localStorage.getItem('currentGameId');
 
     if (gameId) {
-      // Load the saved game
       this.gameService.loadGame(gameId);
 
       this.gameSubscription = this.gameService.gameState$.subscribe({
@@ -41,6 +39,7 @@ export class GameBoardComponent implements OnInit, OnDestroy {
 
             if (loadedGame.isGameOver && loadedGame.winner) {
               setTimeout(() => {
+                this.authGuard.allowResultsAccess = true
                 this.router.navigate(['/results']);
               }, 800);
             }
@@ -49,20 +48,17 @@ export class GameBoardComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error loading game:', error);
           alert('Errore nel caricamento della partita. Ritorna alla schermata iniziale.');
-          this.router.navigate(['/login']);
+          this.router.navigate(['']);
         }
       });
     } else {
-      // No game ID found, redirect to login
       alert('Nessuna partita selezionata. Ritorna alla schermata iniziale.');
-      this.router.navigate(['/login']);
+      this.router.navigate(['']);
     }
 
-    // Load saved games for possible future use (optional)
-    this.gameService.loadSavedGames();
-    this.savedGamesSubscription = this.gameService.savedGames$.subscribe(
-      (games) => (this.savedGames = games)
-    );
+    console.log("human player", this.gameService.HUMAN_PLAYER);
+    console.log("Players", this.gameService.players);
+
   }
 
   ngOnDestroy(): void {
@@ -74,16 +70,11 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Determines if the current cell is the last move made.
-   * @param cell The cell to check.
-   * @returns True if it's the last move, false otherwise.
-   */
+
   isLastMove(cell: iCell): boolean {
     if (!this.lastMove) return false;
     if (cell.col !== this.lastMove.column) return false;
 
-    // Iterate from the top row downwards to find the last disc placed by the player in the column
     for (let row = 0; row < this.game!.board.length; row++) {
       const currentCell = this.game!.board[row][cell.col];
       if (currentCell.occupiedBy === this.lastMove.player) {
@@ -94,10 +85,6 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  /**
-   * Handles the click event on a column to make a move.
-   * @param col The column index clicked.
-   */
   onColumnClick(col: number): void {
     if (this.game && !this.game.isGameOver) {
       console.log('Column clicked:', col);
@@ -105,22 +92,16 @@ export class GameBoardComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Resets the game to its initial state.
-   */
+
   resetGame(): void {
     if (this.game) {
       this.gameService.resetGame();
       this.game = null;
       this.lastMove = null;
-      localStorage.removeItem('currentGameId');
-      this.router.navigate(['/login']);
+      // localStorage.removeItem('currentGameId');
+      // this.router.navigate(['/login']);
     }
   }
 
-  /**
-   * Cancels the current game.
-   * @param id The ID of the game to cancel.
-   */
 
 }

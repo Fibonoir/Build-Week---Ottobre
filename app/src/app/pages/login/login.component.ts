@@ -36,19 +36,14 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
 
-  /**
-   * Handles form submission for creating a new game.
-   */
+
   onSubmit() {
     if (this.isNewGame) {
       this.createNewGame();
     }
-    // No action needed for saved games as selection is handled separately
   }
 
-  /**
-   * Creates a new game based on the selected game mode.
-   */
+
   createNewGame(): void {
     if (!this.player1Name.trim() || (!this.player2Name.trim() && !this.isAgainstAI)) {
       alert('Inserisci i nomi dei giocatori');
@@ -80,54 +75,40 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.resetForm();
   }
 
-  /**
-   * Handles the selection of a saved game.
-   * @param game The selected game.
-   */
+
   selectSavedGame(game: iGame): void {
     localStorage.setItem('currentGameId', game.id);
     this.authGuard.allowGameAccess = true;
     this.router.navigate(['/game']);
   }
 
-  /**
-   * Toggles between creating a new game and loading a saved game.
-   */
+
   toggleNewGame(): void {
     this.isNewGame = true;
     this.isSavedGame = false;
   }
 
-  /**
-   * Toggles between loading a saved game and creating a new game.
-   */
+
   toggleSavedGame(): void {
     this.isSavedGame = true;
     this.isNewGame = false;
   }
 
-  /**
-   * Resets the form fields.
-   */
+
   resetForm() {
     this.player1Name = ""
     this.player2Name = ""
     this.isAgainstAI = false; // Reset game mode selection
   }
 
-  /**
-   * Deletes a saved game.
-   * @param id The ID of the game to delete.
-   */
+
   delete(id: string) {
     this.gameService.cancelGame(id);
     this.gameService.loadSavedGames();
     this.gameService.savedGames$.subscribe((games) => (this.savedGames = games));
   }
 
-  /**
-   * Toggles the AI opponent selection.
-   */
+
   toggleAI(): void {
     this.isAgainstAI = !this.isAgainstAI;
     if (this.isAgainstAI) {
