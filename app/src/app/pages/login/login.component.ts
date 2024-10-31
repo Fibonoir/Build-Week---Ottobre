@@ -82,6 +82,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     localStorage.setItem('currentGameId', game.id);
     this.authGuard.allowGameAccess = true;
     this.router.navigate(['/game']);
+    this.isLoading = true;
   }
 
 
