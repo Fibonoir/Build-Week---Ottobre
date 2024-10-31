@@ -1,111 +1,102 @@
-<main class="flex justify-center items-center">
-  <div class="p-32 bg-color rounded-2xl neon-border w-10/12">
+<!-- src/app/login/login.component.html -->
+
+<main class="flex justify-center items-center min-h-screen bg-gray-100">
+  <div class="p-16 bg-white rounded-2xl shadow-lg w-full max-w-2xl">
     <h1
-      class="text-7xl text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-sky-400"
+      class="text-5xl text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-sky-400"
     >
       Forza 4
     </h1>
     <div class="player-setting">
-      <h2 class="text-indigo-500 mb-4 text-center" *ngIf="!isNewGame">
-        Scegli PARTITA
-      </h2>
-      <button
-        type="submit"
-        class="rounded-sm bg-slate-900 p-4 font-semibold text-white shadow-sm hover:bg-black"
-        (click)="isNewGame = !isNewGame"
-        *ngIf="isNewGame"
-      >
-        TORNA INDIETRO
-      </button>
-      <button
-        type="submit"
-        class="rounded-sm bg-slate-900 p-4 font-semibold text-white shadow-sm hover:bg-black"
-        (click)="isSavedGame = !isSavedGame"
-        *ngIf="isSavedGame"
-      >
-        TORNA INDIETRO
-      </button>
-      <form (ngSubmit)="onSubmit()">
-        <div class="text-black" *ngIf="isNewGame">
-          <div class="flex my-4 justify-center text-xl">
-            <input
-              type="text"
-              id="playerName1"
-              [(ngModel)]="player1Name"
-              name="playerName1"
-              required
-              class="border border-gray-300 rounded p-4"
-              placeholder="Player 1"
-            />
-          </div>
-          <div class="flex my-4 justify-center text-xl">
-            <input
-              type="text"
-              id="playerName2"
-              [(ngModel)]="player2Name"
-              name="playerName2"
-              required
-              class="border border-gray-300 rounded p-4"
-              placeholder="Player 2"
-            />
-          </div>
-        </div>
-        <div
-          class="p-8 bg-white text-black w-1/2 rounded mx-auto my-4 overflow-y-scroll h-80 invisible-scrollbar"
-          *ngIf="isSavedGame"
+      <!-- Toggle Buttons -->
+      <div class="flex justify-center space-x-4 mb-8">
+        <button
+          class="rounded-sm bg-slate-900 p-4 font-semibold text-white shadow-sm hover:bg-black flex items-center"
+          (click)="toggleNewGame()"
+          *ngIf="!isNewGame && !isSavedGame"
         >
-          <ul class="p-4">
-            <li
-              *ngFor="let game of gameService.savedGames$ | async"
-              class="p-4 hover:bg-slate-400"
-            >
-              <a class="flex justify-between px-8">
-                {{ game.players.player1 }} vs {{ game.players.player2 }}
-                <div>
-                  <button
-                    class="px-4 py-2 bg-sky-600 text-white font-bold mx-4"
-                    (click)="selectSavedGame(game.id)"
-                  >
-                    Play
-                  </button>
-                  <button
-                    class="px-4 py-2 bg-red-600 text-white font-bold"
-                    (click)="delete(game.id)"
-                  >
-                    DELETE
-                  </button>
-                </div>
-              </a>
-            </li>
-          </ul>
+          NUOVA PARTITA
+        </button>
+        <button
+          class="rounded-sm bg-slate-900 p-4 font-semibold text-white shadow-sm hover:bg-black flex items-center"
+          (click)="toggleSavedGame()"
+          *ngIf="!isNewGame && !isSavedGame"
+        >
+          CARICA PARTITA
+        </button>
+        <button
+          class="rounded-sm bg-slate-900 p-4 font-semibold text-white shadow-sm hover:bg-black flex items-center"
+          (click)="toggleNewGame()"
+          *ngIf="isSavedGame || isNewGame"
+        >
+          TORNA INDIETRO
+        </button>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" *ngIf="isNewGame">
+        <div class="mb-4">
+          <input
+            type="text"
+            id="playerName1"
+            [(ngModel)]="player1Name"
+            name="playerName1"
+            required
+            class="border border-gray-300 rounded p-4 w-full"
+            placeholder="Player 1"
+          />
         </div>
-        <div class="flex justify-center flex-col items-center">
-          <button
-            type="button"
-            class="flex-none rounded-sm bg-indigo-400 w-2/3 py-4 text-2xl font-semibold text-white shadow-sm hover:bg-indigo-500 my-4"
-            (click)="isNewGame = !isNewGame"
-            *ngIf="!isNewGame && !isSavedGame"
-          >
-            NUOVA PARTITA
-          </button>
-          <button
-            type="submit"
-            class="cursor-progress flex-none rounded-sm bg-indigo-400 w-2/3 py-4 text-2xl font-semibold text-white shadow-sm hover:bg-indigo-500"
-            (click)="onSubmit()"
-            *ngIf="isNewGame"
-          >
-            GIOCA
-          </button>
-          <button
-            type="button"
-            class="flex-none rounded-sm bg-indigo-400 w-2/3 py-4 text-2xl font-semibold text-white shadow-sm hover:bg-indigo-500"
-            (click)="isSavedGame = !isSavedGame"
-            *ngIf="!isSavedGame && !isNewGame"
-          >
-            CARICA PARTITA
-          </button>
+
+        <div class="mb-6" *ngIf="!isAgainstAI">
+          <input
+            type="text"
+            id="playerName2"
+            [(ngModel)]="player2Name"
+            name="playerName2"
+            required
+            class="border border-gray-300 rounded p-4 w-full"
+            placeholder="Player 2"
+          />
         </div>
+
+        <div class="mb-6 flex items-center">
+          <input
+            type="checkbox"
+            id="aiToggle"
+            [(ngModel)]="isAgainstAI"
+            name="aiToggle"
+            class="mr-2"
+          />
+          <label for="aiToggle" class="text-gray-700"
+            >Gioca contro il Computer</label
+          >
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-indigo-400 text-white py-3 rounded hover:bg-indigo-500 text-xl font-semibold"
+        >
+          GIOCA
+        </button>
       </form>
+
+      <div *ngIf="isSavedGame" class="bg-white p-8 rounded shadow">
+        <h2 class="text-center text-xl mb-4">Partite Salvate</h2>
+        <ul>
+          <li
+            *ngFor="let game of savedGames"
+            class="p-4 mb-2 bg-gray-100 rounded hover:bg-gray-200 cursor-pointer flex justify-between items-center"
+            (click)="selectSavedGame(game)"
+          >
+            <span
+              >{{ game.players.player1 }} vs {{ game.players.player2 }}</span
+            >
+            <span class="text-sm text-gray-500">ID: {{ game.id }}</span>
+          </li>
+        </ul>
+        <p *ngIf="savedGames.length === 0" class="text-center text-gray-500">
+          Nessuna partita salvata.
+        </p>
+      </div>
     </div>
   </div>
 </main>
