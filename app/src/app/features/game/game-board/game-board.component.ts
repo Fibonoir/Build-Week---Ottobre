@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { GameService } from '../../../services/game.service';
-import { iCell, iGame, iMove } from '../../../interfaces/game';
-import { TimerService } from '../../../services/timer.service';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { iCell, iGame, iMove, iPlayers } from '../../../interfaces/game';
+
+import { Router } from '@angular/router';
 import { AuthGuard } from '../../../guards/auth.guard';
 
 @Component({
@@ -17,37 +17,45 @@ export class GameBoardComponent implements OnInit, OnDestroy {
   lastMove: iMove | null = null;
   savedGames: iGame[] = [];
   savedGamesSubscription!: Subscription;
+  players: iPlayers = { player1: '', player2: '' };
 
-  constructor(public gameService: GameService, private router: Router, private authGuard: AuthGuard) {}
+  constructor(
+    public gameService: GameService,
+    private router: Router,
+    private authGuard: AuthGuard
+  ) {}
 
   ngOnInit(): void {
     const gameId = localStorage.getItem('currentGameId');
     console.log(gameId);
 
+    this.players = this.gameService.players;
+    console.log('giocatori', this.players);
+
     if (gameId) {
-      this.gameService.loadGame(gameId)
-      this.gameSubscription = this.gameService.gameState$.subscribe((loadedGame) => {
+      this.gameService.loadGame(gameId);
+      this.gameSubscription = this.gameService.gameState$.subscribe(
+        (loadedGame) => {
+          if (loadedGame) {
+            this.game = loadedGame;
 
-          if(loadedGame) {
-          this.game = loadedGame;
+            if (loadedGame.moves.length > 0) {
+              this.game.currentPlayer ===
+                loadedGame.moves[loadedGame.moves.length - 1].player;
+              this.lastMove = loadedGame.moves[loadedGame.moves.length - 1];
+            } else {
+              this.lastMove = null;
+            }
 
-
-          if (loadedGame.moves.length > 0) {
-            this.game.currentPlayer === loadedGame.moves[loadedGame.moves.length - 1].player
-            this.lastMove = loadedGame.moves[loadedGame.moves.length - 1];
-          } else {
-            this.lastMove = null;
-          }
-
-          if (loadedGame.isGameOver && loadedGame.winner) {
-            setTimeout(() => {
-              this.authGuard.allowResultsAccess = true;
-              this.router.navigate(['/results']);
-            }, 800);
+            if (loadedGame.isGameOver && loadedGame.winner) {
+              setTimeout(() => {
+                this.authGuard.allowResultsAccess = true;
+                this.router.navigate(['/results']);
+              }, 800);
+            }
           }
         }
-
-      });
+      );
     } else {
       this.router.navigate(['']);
     }
