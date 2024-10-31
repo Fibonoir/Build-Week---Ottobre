@@ -1,7 +1,9 @@
 <div class="relative w-full h-screen flex overflow-hidden bg-win-left">
-  <div class="absolute top-0 left-0 p-8 text-red-600 flex flex-col items-start">
-    <div class="bg-white bg-opacity-80 p-4 rounded shadow-md neon-border">
-      <h1 class="text-4xl font-bold p-2">{{ loser }} Hai perso! 😞</h1>
+  <div>
+    <div
+      class="bg-red-950 opacity-95 text-white rounded-lg absolute top-12 left-12"
+    >
+      <h1 class="text-4xl font-bold p-12">{{ loser }} <br />Hai perso! 😞</h1>
     </div>
   </div>
 
@@ -9,8 +11,8 @@
     class="absolute inset-0 flex items-center justify-center text-center p-8"
   >
     <a
-      routerLink=""
-      class="button flex-none rounded-md bg-indigo-500 px-8 py-4 text-lg font-semibold text-white shadow-sm hover:bg-indigo-400 transition duration-300 z-50"
+      (click)="goHome()"
+      class="w-1/3 flex-none cursor-pointer rounded-md hover:bg-white hover:text-black py-8 text-lg font-semibold shadow-sm bg-black text-white whitespace-normal transition duration-300 z-50"
     >
       Gioca di nuovo
     </a>
@@ -20,11 +22,11 @@
     class="w-1/2 h-full flex items-end justify-end p-8 text-center bg-win-right bg-gray-300 text-gray-500'"
   >
     <div class="text-right">
-      <div class="bg-white bg-opacity-80 p-4 rounded shadow-md neon-border">
-        <h1 class="text-4xl font-bold z-30 p-2">{{ winner }} Hai vinto! 😃</h1>
+      <div class="bg-white shadow-md neon-border">
+        <h1 class="text-4xl font-bold p-12">Vince {{ winner }} 😃</h1>
       </div>
     </div>
   </div>
 
-  <div class="diagonal-line relative w-full h-screen"></div>
+  <div class="diagonal-line relative w-full h-screen -z-10"></div>
 </div>

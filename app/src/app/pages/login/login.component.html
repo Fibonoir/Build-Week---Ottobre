@@ -1,7 +1,9 @@
 <main class="flex justify-center items-center min-h-screen h-screen">
-  <div class="p-16 rounded-2xl shadow-lg w-full max-w-2xl bg-color neon-border">
+  <div
+    class="p-16 rounded-2xl shadow-lg w-full max-w-2xl bg-color opacity-95 neon-border"
+  >
     <h1
-      class="text-8xl font-bold italic text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-sky-400"
+      class="text-9xl font-bold italic text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-15% from-blue-600 to-sky-200"
     >
       Forza 4
     </h1>
@@ -9,21 +11,21 @@
       <!-- Toggle Buttons -->
       <div class="flex flex-wrap justify-center mb-8">
         <a
-          class="rounded-md bg-slate-800 hover:bg-slate-900 cursor-pointer p-4 font-semibold text-white shadow-sm w-full text-center my-4"
+          class="rounded-md bg-yellow-500 text-slate-700 hover:bg-yellow-600 hover:text-white text-xl cursor-pointer py-4 font-semibold shadow-sm w-full text-center my-4"
           (click)="toggleNewGame()"
           *ngIf="!isNewGame && !isSavedGame"
         >
           NUOVA PARTITA
         </a>
         <a
-          class="rounded-md bg-slate-800 hover:bg-slate-900 cursor-pointer p-4 font-semibold text-white shadow-sm w-full text-center my-4"
+          class="rounded-md bg-yellow-500 text-slate-700 hover:bg-yellow-600 hover:text-white text-xl cursor-pointer py-4 font-semibold shadow-sm w-full text-center my-4"
           (click)="toggleSavedGame()"
           *ngIf="!isNewGame && !isSavedGame"
         >
           CARICA PARTITA
         </a>
         <a
-          class="rounded-md bg-slate-800 hover:bg-slate-900 cursor-pointer p-4 font-semibold text-white shadow-sm flex items-center"
+          class="rounded-md bg-yellow-500 text-slate-700 hover:bg-yellow-600 hover:text-white text-xl cursor-pointer p-4 font-semibold shadow-sm flex items-center"
           (click)="goBack()"
           *ngIf="isSavedGame || isNewGame"
         >
@@ -64,14 +66,14 @@
             name="aiToggle"
             class="mr-2"
           />
-          <label for="aiToggle" class="text-gray-700"
+          <label for="aiToggle" class="text-white"
             >Gioca contro il Computer</label
           >
         </div>
 
         <button
           type="submit"
-          class="w-full bg-indigo-400 text-white py-3 rounded hover:bg-indigo-500 text-xl font-semibold"
+          class="w-full bg-yellow-500 text-slate-800 py-3 rounded hover:bg-yellow-600 hover:text-white text-xl font-semibold"
         >
           GIOCA
         </button>
@@ -95,7 +97,7 @@
               >ID: {{ game.id }}
               <span
                 (click)="delete(game.id); $event.stopPropagation()"
-                class="bg-red-500 text-white font-bold px-4 py-2 rounded-sm z-40"
+                class="bg-red-500 text-white font-bold px-4 py-2 rounded-sm z-40 mx-2"
                 >DELETE</span
               ></span
             >

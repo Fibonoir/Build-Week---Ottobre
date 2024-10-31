@@ -172,7 +172,7 @@ export class GameService {
               if (this.isAgainstAI && response.currentPlayer === this.AI_PLAYER && !response.isGameOver) {
                 setTimeout(() => {
                   this.initiateAIMove();
-                }, 1000); // Optional delay for better UX
+                }, 500); // Optional delay for better UX
               }
             }
           },

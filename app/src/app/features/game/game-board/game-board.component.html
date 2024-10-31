@@ -1,17 +1,17 @@
 <main>
   <ng-container *ngIf="game">
-    <div class="flex flex-col items-center">
-      <h1
-        class="text-7xl text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-sky-400"
-      >
-        Forza 4
-      </h1>
-
+    <div class="flex flex-col items-center w-screen">
       <div>
         <app-timer></app-timer>
       </div>
       <div class="flex items-center justify-around w-full">
-        <div class="flex flex-col items-center justify-center w-1/4 bg-color">
+        <div
+          class="flex flex-col items-center justify-center w-1/4"
+          [ngClass]="{
+            'bg-color p-8 opacity-80':
+              game.currentPlayer === game.players.player1
+          }"
+        >
           <img
             [ngClass]="{
               'w-64': game.currentPlayer === game.players.player1
@@ -23,7 +23,7 @@
           <h1
             class="text-5xl text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-sky-400 player-title"
             [ngClass]="{
-              'player-title text-7xl':
+              'player-title text-6xl':
                 game.currentPlayer === game.players.player1
             }"
           >
@@ -37,7 +37,7 @@
             <div
               *ngFor="let cell of row"
               (click)="onColumnClick(cell.col)"
-              class="w-16 h-16 bg-white rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-200 m-1"
+              class="w-14 h-14 bg-white rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-200 m-1"
             >
               <div
                 [ngClass]="{
@@ -45,12 +45,18 @@
                   'bg-yellow-500': cell.occupiedBy === game.players.player2,
                   'animate-fall': isLastMove(cell)
                 }"
-                class="w-14 h-14 rounded-full"
+                class="w-12 h-12 rounded-full"
               ></div>
             </div>
           </div>
         </div>
-        <div class="flex flex-col items-center justify-center w-1/4 bg-color">
+        <div
+          class="flex flex-col items-center justify-center w-1/4"
+          [ngClass]="{
+            'bg-color p-8 opacity-80':
+              game.currentPlayer === game.players.player2
+          }"
+        >
           <img
             [ngClass]="{
               'w-64': game.currentPlayer === game.players.player2
@@ -62,7 +68,7 @@
           <h1
             class="text-5xl text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-sky-400"
             [ngClass]="{
-              'player-title text-7xl':
+              'player-title text-6xl':
                 game.currentPlayer === game.players.player2
             }"
           >
@@ -71,10 +77,10 @@
         </div>
       </div>
 
-      <div class="mt-4">
+      <div class="mt-4 w-1/2">
         <button
           (click)="resetGame()"
-          class="flex-none rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 mb-5"
+          class="rounded-md bg-black py-4 w-full text font-semibold text-white shadow-sm hover:bg-white hover:text-black mb-5"
         >
           Resetta Gioco
         </button>
